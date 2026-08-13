@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "css": "app/globals.css",
+    "baseColor": "zinc",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@/components",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  },
+  "registries": {
+    "hermes": {
+      "url": "https://raw.githubusercontent.com/tbachir/hermes-ui/main/public/r/{name}.json"
+    },
+    "ai-elements": {
+      "url": "https://elements.ai-sdk.dev/api/registry/{name}.json"
+    }
+  }
+}

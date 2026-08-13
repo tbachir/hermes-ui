@@ -1,0 +1,46 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "hermes-ui-workflow",
+  "homepage": "https://github.com/tbachir/hermes-ui",
+  "items": [
+    {
+      "name": "hermes-workflow-builder",
+      "type": "registry:block",
+      "title": "Hermes Workflow Builder",
+      "description": "React Flow + AI Elements visual editor for @burner-io/workflow with Hermes Run nodes and conditional handles.",
+      "registryDependencies": [
+        "badge",
+        "button",
+        "https://elements.ai-sdk.dev/api/registry/canvas.json",
+        "https://elements.ai-sdk.dev/api/registry/connection.json",
+        "https://elements.ai-sdk.dev/api/registry/edge.json",
+        "https://elements.ai-sdk.dev/api/registry/node.json",
+        "https://elements.ai-sdk.dev/api/registry/panel.json",
+        "https://elements.ai-sdk.dev/api/registry/toolbar.json"
+      ],
+      "dependencies": [
+        "@burner-io/workflow@^0.1.0",
+        "@xyflow/react@12.11.2"
+      ],
+      "files": [
+        {
+          "path": "hermes-workflow-builder/workflow-builder.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/workflow-builder.tsx"
+        },
+        {
+          "path": "hermes-workflow-builder/sample-workflow.ts",
+          "type": "registry:lib",
+          "target": "@lib/hermes/sample-workflow.ts"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "workflow",
+        "react-flow",
+        "ai-elements"
+      ],
+      "docs": "The workflow definition remains application-owned. @burner-io/hermes is only used by the workflow runtime adapter; Hermes itself does not know about Workflow."
+    }
+  ]
+}

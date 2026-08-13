@@ -1,0 +1,12 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "hermes-ui",
+  "homepage": "https://github.com/tbachir/hermes-ui",
+  "include": [
+    "registry/foundation/registry.json",
+    "registry/components/registry.json",
+    "registry/blocks/registry.json",
+    "registry/pages/registry.json",
+    "registry/workflow/registry.json"
+  ]
+}

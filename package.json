@@ -1,0 +1,16 @@
+{
+  "name": "hermes-ui-registry",
+  "version": "0.2.0",
+  "private": true,
+  "description": "shadcn registry of ready-to-use Next.js + Supabase + AI Elements blocks powered by @burner-io/hermes.",
+  "type": "module",
+  "scripts": {
+    "check": "node scripts/check-registry.mjs",
+    "build": "npx --yes shadcn@4.14.1 build",
+    "registry:build": "npx --yes shadcn@4.14.1 build ./registry.json -o ./public/r",
+    "registry:check": "node scripts/check-registry.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
