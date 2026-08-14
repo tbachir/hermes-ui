@@ -1,10 +1,21 @@
 # hermes-ui
 
-A shadcn registry for building **trusted application surfaces on top of the Hermes API Server**, powered by `@burner-io/hermes` and optional `@burner-io/workflow`.
+A shadcn registry of reusable **Hermes control-plane, runtime and workflow UI** powered by `@burner-io/hermes` and optional `@burner-io/workflow`.
 
-`hermes-ui` owns reusable Hermes-facing UI/BFF bricks only. It does **not** own your application backend, authentication, domain model or public API. The consuming application decides who can access a Hermes capability and exposes only the bounded services it intends to provide.
+`hermes-ui` is intentionally focused on Hermes-facing bricks. It does **not** own your product backend, authentication, public API or domain model. The consuming application decides who may access Hermes and which Hermes capabilities it exposes to its own users or services.
 
-## Architecture
+## One Hermes connection
+
+The consuming application configures exactly one private Hermes origin and one machine credential:
+
+```dotenv
+HERMES_URL=http://127.0.0.1:8642
+HERMES_API_KEY=
+```
+
+Internally, `@burner-io/hermes` currently exposes more than one convenient client facade. `hermes-ui` may therefore use a control facade for native `/api/*` operations and an API Server facade for Runs/OpenAI-compatible resources, but **both point to the exact same `HERMES_URL` and use the exact same `HERMES_API_KEY` Bearer credential**.
+
+There is no second application-level Hermes URL, no second Hermes credential and no browser-to-Hermes connection.
 
 ```text
 Browser / client
@@ -13,35 +24,41 @@ Browser / client
       ▼
 Your backend / BFF
       │
-      │ HERMES_API_KEY (server only)
+      │ server-only HERMES_API_KEY
       ▼
-HERMES_URL
-      │
-      ▼
-Hermes API Server
-├── /v1/capabilities
-├── /v1/models
-├── /v1/skills
-├── /v1/toolsets
-├── /v1/runs/*
-├── /api/model/options
-├── /api/sessions/*
-└── /health/*
+             HERMES_URL
+                 │
+        ┌────────┴────────┐
+        │                 │
+  control facade      run/API facade
+        │                 │
+        └────────┬────────┘
+                 ▼
+              Hermes
+          private network
 ```
-
-The browser never receives Hermes credentials and should not reach Hermes directly.
 
 ## Install from GitHub
 
+Install one focused surface:
+
 ```bash
 pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-status-card
+pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-kanban-board
+pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-cron-manager
 pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-run-console
-pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-capabilities-center
-pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-models-center
-pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-system-center
 ```
 
-Or install the supported Hermes foundation and UI set:
+Install a composed area:
+
+```bash
+pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-command-center
+pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-capabilities-center
+pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-developer-center
+pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-control-plane
+```
+
+Or install the complete Hermes foundation + control plane:
 
 ```bash
 pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-stack
@@ -53,84 +70,116 @@ AI Elements expects a Radix-based shadcn setup:
 pnpm dlx shadcn@latest init -d --base radix
 ```
 
-## V0.4 catalog
-
-The active registry intentionally tracks the stable machine-facing API Server surface rather than mirroring the Web Dashboard backend.
+## Catalog
 
 ### Foundation
 
 | Item | Purpose |
 |---|---|
-| `hermes-server` | one server-only `HermesApiServerApi` using `HERMES_URL` + `HERMES_API_KEY` |
-| `hermes-access` | app-owned authorization seam in front of Hermes routes |
-| `hermes-api` | explicit bounded Next.js BFF routes for API Server resources |
+| `hermes-server` | single private Hermes connection, exposed through SDK facades sharing one URL/key |
+| `hermes-access` | application-owned authorization seam in front of Hermes operations |
+| `hermes-api` | explicit bounded Next.js Route Handlers for native Hermes operations |
 | `hermes-query` | typed browser facade + TanStack Query hooks |
 
-### Components
+### Focused components
 
-- `hermes-status-card`
-- `hermes-run-console`
-- `hermes-session-list`
+| Area | Items |
+|---|---|
+| Runtime | `hermes-status-card`, `hermes-run-console`, `hermes-session-list` |
+| Profiles / models | `hermes-profile-switcher`, `hermes-model-manager`, `hermes-provider-manager`, `hermes-credential-manager` |
+| Capabilities | `hermes-skill-manager`, `hermes-mcp-manager`, `hermes-toolset-manager`, `hermes-plugin-manager` |
+| Work | `hermes-kanban-board` |
+| Automation | `hermes-cron-manager`, `hermes-webhook-manager` |
+| State / learning | `hermes-memory-manager`, `hermes-learning-overview` |
+| Observability | `hermes-analytics-overview`, `hermes-log-viewer` |
+| Developer | `hermes-config-overview`, `hermes-env-manager`, `hermes-file-browser`, `hermes-git-status`, `hermes-operations-panel` |
+| Communication | `hermes-messaging-manager`, `hermes-portal-card`, `hermes-audio-console` |
+| System | `hermes-gateway-controls`, `hermes-update-card` |
 
-### Blocks
+### Composed blocks
 
-- `hermes-capabilities-center`
-- `hermes-models-center`
-- `hermes-system-center`
-- `hermes-stack`
+- `hermes-command-center` — status, profiles, Runs, sessions and Kanban
+- `hermes-capabilities-center` — skills, MCP and toolsets
+- `hermes-models-center` — profiles, models, providers and credentials
+- `hermes-automation-center` — cron and webhooks
+- `hermes-observability-center` — analytics and sessions
+- `hermes-developer-center` — config, env, managed files, Git, diagnostics and logs
+- `hermes-learning-center` — learning/Curator and memory
+- `hermes-communication-center` — messaging, Portal and audio
+- `hermes-system-center` — status, gateway, memory, plugins and updates
+- `hermes-control-plane` — complete tabbed Hermes administration surface
+- `hermes-stack` — full foundation + control-plane preset
 
 ### Pages
 
-- `/hermes`
-- `/hermes/runs`
-- `/hermes/sessions`
-- `/hermes/capabilities`
-- `/hermes/models`
-- `/hermes/system`
-- `/hermes/workflows`
+Ready App Router compositions are provided for:
+
+```text
+/hermes
+/hermes/runs
+/hermes/sessions
+/hermes/capabilities
+/hermes/models
+/hermes/automations
+/hermes/observability
+/hermes/developer
+/hermes/learning
+/hermes/communication
+/hermes/system
+/hermes/workflows
+```
 
 ### Workflow
 
-`hermes-workflow-builder` remains application-owned orchestration through `@burner-io/workflow`. Hermes only sees native Runs; Hermes does not learn a `Workflow` domain concept.
+`hermes-workflow-builder` targets `@burner-io/workflow@^0.1.0` and composes React Flow with AI Elements. Workflow definitions remain application-owned; Hermes only receives native Hermes operations/Runs and does not learn application concepts such as Workflow, Project or Spec.
 
-## Required Hermes environment
+## Application boundary
 
-```dotenv
-HERMES_URL=http://127.0.0.1:8642
-HERMES_API_KEY=
+The registry is auth/backend agnostic. The default access seam expects the consuming application to provide:
+
+```ts
+// @/lib/app-user
+export interface AppUser {
+  id: string;
+  role?: string;
+  demo?: boolean;
+}
+
+export async function getAppUser(): Promise<AppUser | null> {
+  // Better Auth, custom auth, etc.
+}
 ```
 
-These values are **server-only**. There is no `HERMES_DASHBOARD_URL`, `HERMES_SESSION_TOKEN`, `HERMES_BEARER_TOKEN`, duplicate API Server URL or `NEXT_PUBLIC_HERMES_*` credential in the V0.4 contract.
-
-The optional default access block also understands:
+Optional authorization configuration:
 
 ```dotenv
 HERMES_UI_ALLOWED_ROLES=admin
 HERMES_UI_ALLOWED_USER_IDS=
+HERMES_UI_GIT_ROOTS=
 ```
 
-`hermes-access` deliberately depends on a consuming-app seam `@/lib/app-user`. The template currently implements that seam with Better Auth, but the registry itself does not require Better Auth, Payload or any other application backend.
-
-## Template
-
-The clone-ready reference application is tracked separately as `tbachir/burner-hermes-app-template`. `hermes-ui` pins the compatible template revision under [`templates/burner-hermes-app`](templates/burner-hermes-app) instead of silently duplicating a second source of truth.
-
-The current pinned template already uses the same single private Hermes API Server connection and has removed obsolete Dashboard-only surfaces.
+Payload, Better Auth or another backend/auth stack may implement the surrounding application, but they are intentionally not dependencies of `hermes-ui`.
 
 ## Security posture
 
-- Hermes is private infrastructure, not a public application API.
-- no generic `/api/hermes/proxy`;
-- no Hermes credential in `NEXT_PUBLIC_*`;
-- the consuming application authenticates and authorizes users/clients before Hermes is called;
-- mutations use same-origin checks in the default Next.js BFF;
-- base V0.4 surfaces are limited to API Server capabilities, model discovery, skills/toolsets, sessions and Runs;
-- `/v1/capabilities` is treated as the runtime contract/source of truth for optional API features.
+- Hermes remains private infrastructure.
+- Hermes credentials are server-only and never use `NEXT_PUBLIC_*`.
+- Browsers call explicit application/BFF routes, never Hermes directly.
+- There is no generic `/api/hermes/proxy`.
+- Hermes mutations remain individually exposed and protected by the consuming application's authorization policy.
+- Sensitive developer surfaces remain bounded: redacted env metadata, read-only generic file browsing, allow-listed Git roots and explicit operations.
+- The same `HERMES_API_KEY` authenticates the Hermes route families used by the registry through the configured private origin.
+
+## Reference template
+
+The clone-ready reference application remains in `tbachir/burner-hermes-app-template`. `hermes-ui` tracks its compatible revision under [`templates/burner-hermes-app`](templates/burner-hermes-app) instead of duplicating a second source tree.
+
+The template is the integration/reference application; this repository remains the reusable Hermes registry.
 
 ## Package compatibility
 
 - `@burner-io/hermes@^0.5.0`
-- `@burner-io/workflow@^0.1.0` for workflow items
+- `@burner-io/workflow@^0.1.0`
 
 ## Validate
 
@@ -148,3 +197,4 @@ GitHub source-registry installation does not require a static registry build.
 - [`docs/SECURITY.md`](docs/SECURITY.md)
 - [`docs/TEMPLATE.md`](docs/TEMPLATE.md)
 - [`docs/ADDING-ITEMS.md`](docs/ADDING-ITEMS.md)
+- [`docs/ROADMAP.md`](docs/ROADMAP.md)
