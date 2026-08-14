@@ -23,20 +23,14 @@
           "target": "@components/hermes/hermes-command-center.tsx"
         }
       ],
-      "categories": [
-        "hermes",
-        "dashboard",
-        "block",
-        "admin"
-      ]
+      "categories": ["hermes", "dashboard", "block", "admin"]
     },
     {
       "name": "hermes-stack",
       "type": "registry:block",
-      "title": "Hermes Personal Stack",
-      "description": "Opinionated Next.js 16 + Supabase + shadcn + AI Elements Hermes foundation and full control plane.",
+      "title": "Hermes Full Stack",
+      "description": "Complete reusable Hermes foundation and control plane for a trusted Next.js application.",
       "registryDependencies": [
-        "tbachir/hermes-ui/supabase-next",
         "tbachir/hermes-ui/hermes-server",
         "tbachir/hermes-ui/hermes-access",
         "tbachir/hermes-ui/hermes-api",
@@ -45,13 +39,8 @@
         "tbachir/hermes-ui/hermes-control-plane"
       ],
       "files": [],
-      "categories": [
-        "hermes",
-        "starter",
-        "supabase",
-        "nextjs"
-      ],
-      "docs": "After installation, set Supabase and Hermes env vars, then render <HermesQueryProvider><HermesCommandCenter /></HermesQueryProvider>. The registry intentionally does not ship authentication screens."
+      "categories": ["hermes", "starter", "control-plane", "nextjs"],
+      "docs": "The registry is auth/backend agnostic. Implement @/lib/app-user in the consuming application, set server-only HERMES_URL and HERMES_API_KEY, then render the Hermes control plane behind your own authorization boundary."
     },
     {
       "name": "hermes-capabilities-center",
@@ -70,13 +59,7 @@
           "target": "@components/hermes/hermes-capabilities-center.tsx"
         }
       ],
-      "categories": [
-        "hermes",
-        "skills",
-        "mcp",
-        "tools",
-        "block"
-      ]
+      "categories": ["hermes", "skills", "mcp", "tools", "block"]
     },
     {
       "name": "hermes-models-center",
@@ -96,13 +79,7 @@
           "target": "@components/hermes/hermes-models-center.tsx"
         }
       ],
-      "categories": [
-        "hermes",
-        "models",
-        "providers",
-        "credentials",
-        "block"
-      ]
+      "categories": ["hermes", "models", "providers", "credentials", "block"]
     },
     {
       "name": "hermes-automation-center",
@@ -120,13 +97,7 @@
           "target": "@components/hermes/hermes-automation-center.tsx"
         }
       ],
-      "categories": [
-        "hermes",
-        "automation",
-        "cron",
-        "webhooks",
-        "block"
-      ]
+      "categories": ["hermes", "automation", "cron", "webhooks", "block"]
     },
     {
       "name": "hermes-system-center",
@@ -147,12 +118,7 @@
           "target": "@components/hermes/hermes-system-center.tsx"
         }
       ],
-      "categories": [
-        "hermes",
-        "system",
-        "operations",
-        "block"
-      ]
+      "categories": ["hermes", "system", "operations", "block"]
     },
     {
       "name": "hermes-observability-center",
@@ -170,13 +136,7 @@
           "target": "@components/hermes/hermes-observability-center.tsx"
         }
       ],
-      "categories": [
-        "hermes",
-        "analytics",
-        "sessions",
-        "observability",
-        "block"
-      ]
+      "categories": ["hermes", "analytics", "sessions", "observability", "block"]
     },
     {
       "name": "hermes-control-plane",
@@ -202,12 +162,7 @@
           "target": "@components/hermes/hermes-control-plane.tsx"
         }
       ],
-      "categories": [
-        "hermes",
-        "control-plane",
-        "dashboard",
-        "block"
-      ]
+      "categories": ["hermes", "control-plane", "dashboard", "block"]
     },
     {
       "name": "hermes-developer-center",
@@ -229,12 +184,7 @@
           "target": "@components/hermes/hermes-developer-center.tsx"
         }
       ],
-      "categories": [
-        "hermes",
-        "developer",
-        "operations",
-        "block"
-      ]
+      "categories": ["hermes", "developer", "operations", "block"]
     },
     {
       "name": "hermes-learning-center",
@@ -252,12 +202,7 @@
           "target": "@components/hermes/hermes-learning-center.tsx"
         }
       ],
-      "categories": [
-        "hermes",
-        "learning",
-        "memory",
-        "block"
-      ]
+      "categories": ["hermes", "learning", "memory", "block"]
     },
     {
       "name": "hermes-communication-center",
@@ -276,13 +221,7 @@
           "target": "@components/hermes/hermes-communication-center.tsx"
         }
       ],
-      "categories": [
-        "hermes",
-        "messaging",
-        "audio",
-        "portal",
-        "block"
-      ]
+      "categories": ["hermes", "messaging", "audio", "portal", "block"]
     }
   ]
 }
