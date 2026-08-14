@@ -13,7 +13,19 @@ HERMES_URL=http://127.0.0.1:8642
 HERMES_API_KEY=
 ```
 
-Internally, `@burner-io/hermes` currently exposes more than one convenient client facade. `hermes-ui` may therefore use a control facade for native `/api/*` operations and an API Server facade for Runs/OpenAI-compatible resources, but **both point to the exact same `HERMES_URL` and use the exact same `HERMES_API_KEY` Bearer credential**.
+Since `@burner-io/hermes@0.6`, the recommended integration is a single `HermesConnection` created from that pair. The SDK exposes native control and Runs/API facades from that one connection; **both point to the exact same `HERMES_URL` and use the exact same `HERMES_API_KEY` Bearer credential**.
+
+```ts
+import { createHermesConnectionUnchecked } from "@burner-io/hermes";
+
+const hermes = createHermesConnectionUnchecked({
+  baseUrl: process.env.HERMES_URL!,
+  apiKey: process.env.HERMES_API_KEY!,
+});
+
+await hermes.control.system.status();
+await hermes.runs.create({ input: "Review this change" });
+```
 
 There is no second application-level Hermes URL, no second Hermes credential and no browser-to-Hermes connection.
 
@@ -26,13 +38,16 @@ Your backend / BFF
       │
       │ server-only HERMES_API_KEY
       ▼
-             HERMES_URL
+          HermesConnection
                  │
         ┌────────┴────────┐
         │                 │
-  control facade      run/API facade
+  control facade      runs/API facade
         │                 │
         └────────┬────────┘
+                 ▼
+             HERMES_URL
+                 │
                  ▼
               Hermes
           private network
@@ -76,7 +91,7 @@ pnpm dlx shadcn@latest init -d --base radix
 
 | Item | Purpose |
 |---|---|
-| `hermes-server` | single private Hermes connection, exposed through SDK facades sharing one URL/key |
+| `hermes-server` | one private `HermesConnection`, with control and Runs/API compatibility getters |
 | `hermes-access` | application-owned authorization seam in front of Hermes operations |
 | `hermes-api` | explicit bounded Next.js Route Handlers for native Hermes operations |
 | `hermes-query` | typed browser facade + TanStack Query hooks |
@@ -178,7 +193,7 @@ The template is the integration/reference application; this repository remains t
 
 ## Package compatibility
 
-- `@burner-io/hermes@^0.5.0`
+- `@burner-io/hermes@^0.6.0`
 - `@burner-io/workflow@^0.1.0`
 
 ## Validate
