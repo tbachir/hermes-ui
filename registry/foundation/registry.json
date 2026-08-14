@@ -10,7 +10,7 @@
       "description": "One private Hermes connection exposed through the SDK control and API Server facades.",
       "author": "Tarek Bachir",
       "dependencies": [
-        "@burner-io/hermes@^0.5.0",
+        "@burner-io/hermes@^0.6.0",
         "server-only"
       ],
       "envVars": {
@@ -40,7 +40,7 @@
         "server",
         "nextjs"
       ],
-      "docs": "HERMES_URL and HERMES_API_KEY are server-only. Both @burner-io/hermes facades use this same origin and the same API_SERVER_KEY bearer credential. There is no separate Dashboard URL or Dashboard credential in the application contract."
+      "docs": "HERMES_URL and HERMES_API_KEY are server-only. @burner-io/hermes >=0.6 creates one HermesConnection from this pair and exposes native control and Runs/API facades over that same trusted machine connection. There is no separate Dashboard URL or Dashboard credential in the application contract."
     },
     {
       "name": "hermes-access",
@@ -118,7 +118,7 @@
         "control-plane",
         "nextjs"
       ],
-      "docs": "Every browser-facing route remains explicit and allow-listed. The internal SDK may use different namespaces/facades, but every Hermes call resolves through the same HERMES_URL and HERMES_API_KEY. There is intentionally no generic /api/hermes/proxy endpoint."
+      "docs": "Every browser-facing route remains explicit and allow-listed. The internal SDK exposes control and Runs/API facades from one HermesConnection created with the same HERMES_URL and HERMES_API_KEY. There is intentionally no generic /api/hermes/proxy endpoint."
     },
     {
       "name": "hermes-query",
@@ -131,7 +131,7 @@
       ],
       "dependencies": [
         "@tanstack/react-query@5.101.4",
-        "@burner-io/hermes@^0.5.0"
+        "@burner-io/hermes@^0.6.0"
       ],
       "files": [
         { "path": "hermes-query/provider.tsx", "type": "registry:component", "target": "@components/hermes/hermes-query-provider.tsx" },
