@@ -8,210 +8,108 @@
       "type": "registry:page",
       "title": "Hermes Dashboard Page",
       "description": "Complete /hermes page using the full Hermes control plane.",
-      "registryDependencies": [
-        "tbachir/hermes-ui/hermes-stack",
-        "tbachir/hermes-ui/hermes-control-plane"
-      ],
-      "files": [
-        {
-          "path": "hermes-dashboard-page/page.tsx",
-          "type": "registry:page",
-          "target": "~/app/hermes/page.tsx"
-        }
-      ],
-      "categories": [
-        "hermes",
-        "page",
-        "dashboard"
-      ]
+      "registryDependencies": ["tbachir/hermes-ui/hermes-stack", "tbachir/hermes-ui/hermes-control-plane"],
+      "files": [{ "path": "hermes-dashboard-page/page.tsx", "type": "registry:page", "target": "~/app/hermes/page.tsx" }],
+      "categories": ["hermes", "page", "dashboard"]
+    },
+    {
+      "name": "hermes-runs-page",
+      "type": "registry:page",
+      "title": "Hermes Runs Page",
+      "description": "Dedicated native Hermes Runs page with approvals and stop controls.",
+      "registryDependencies": ["tbachir/hermes-ui/hermes-run-console", "tbachir/hermes-ui/hermes-query"],
+      "files": [{ "path": "hermes-runs-page/page.tsx", "type": "registry:page", "target": "~/app/hermes/runs/page.tsx" }],
+      "categories": ["hermes", "page", "runs"]
+    },
+    {
+      "name": "hermes-sessions-page",
+      "type": "registry:page",
+      "title": "Hermes Sessions Page",
+      "description": "Dedicated native Hermes session explorer page.",
+      "registryDependencies": ["tbachir/hermes-ui/hermes-session-list", "tbachir/hermes-ui/hermes-query"],
+      "files": [{ "path": "hermes-sessions-page/page.tsx", "type": "registry:page", "target": "~/app/hermes/sessions/page.tsx" }],
+      "categories": ["hermes", "page", "sessions"]
     },
     {
       "name": "hermes-capabilities-page",
       "type": "registry:page",
       "title": "Hermes Capabilities Page",
       "description": "Complete /hermes/capabilities page for skills, MCP and toolsets.",
-      "registryDependencies": [
-        "tbachir/hermes-ui/hermes-capabilities-center",
-        "tbachir/hermes-ui/hermes-query"
-      ],
-      "files": [
-        {
-          "path": "hermes-capabilities-page/page.tsx",
-          "type": "registry:page",
-          "target": "~/app/hermes/capabilities/page.tsx"
-        }
-      ],
-      "categories": [
-        "hermes",
-        "page"
-      ]
+      "registryDependencies": ["tbachir/hermes-ui/hermes-capabilities-center", "tbachir/hermes-ui/hermes-query"],
+      "files": [{ "path": "hermes-capabilities-page/page.tsx", "type": "registry:page", "target": "~/app/hermes/capabilities/page.tsx" }],
+      "categories": ["hermes", "page"]
     },
     {
       "name": "hermes-models-page",
       "type": "registry:page",
       "title": "Hermes Models Page",
       "description": "Complete /hermes/models page for profiles, models, providers and credentials.",
-      "registryDependencies": [
-        "tbachir/hermes-ui/hermes-models-center",
-        "tbachir/hermes-ui/hermes-query"
-      ],
-      "files": [
-        {
-          "path": "hermes-models-page/page.tsx",
-          "type": "registry:page",
-          "target": "~/app/hermes/models/page.tsx"
-        }
-      ],
-      "categories": [
-        "hermes",
-        "page"
-      ]
+      "registryDependencies": ["tbachir/hermes-ui/hermes-models-center", "tbachir/hermes-ui/hermes-query"],
+      "files": [{ "path": "hermes-models-page/page.tsx", "type": "registry:page", "target": "~/app/hermes/models/page.tsx" }],
+      "categories": ["hermes", "page"]
     },
     {
       "name": "hermes-automations-page",
       "type": "registry:page",
       "title": "Hermes Automations Page",
       "description": "Complete /hermes/automations page for cron and webhooks.",
-      "registryDependencies": [
-        "tbachir/hermes-ui/hermes-automation-center",
-        "tbachir/hermes-ui/hermes-query"
-      ],
-      "files": [
-        {
-          "path": "hermes-automations-page/page.tsx",
-          "type": "registry:page",
-          "target": "~/app/hermes/automations/page.tsx"
-        }
-      ],
-      "categories": [
-        "hermes",
-        "page"
-      ]
+      "registryDependencies": ["tbachir/hermes-ui/hermes-automation-center", "tbachir/hermes-ui/hermes-query"],
+      "files": [{ "path": "hermes-automations-page/page.tsx", "type": "registry:page", "target": "~/app/hermes/automations/page.tsx" }],
+      "categories": ["hermes", "page"]
     },
     {
       "name": "hermes-observability-page",
       "type": "registry:page",
       "title": "Hermes Observability Page",
       "description": "Complete /hermes/observability page for analytics and sessions.",
-      "registryDependencies": [
-        "tbachir/hermes-ui/hermes-observability-center",
-        "tbachir/hermes-ui/hermes-query"
-      ],
-      "files": [
-        {
-          "path": "hermes-observability-page/page.tsx",
-          "type": "registry:page",
-          "target": "~/app/hermes/observability/page.tsx"
-        }
-      ],
-      "categories": [
-        "hermes",
-        "page"
-      ]
+      "registryDependencies": ["tbachir/hermes-ui/hermes-observability-center", "tbachir/hermes-ui/hermes-query"],
+      "files": [{ "path": "hermes-observability-page/page.tsx", "type": "registry:page", "target": "~/app/hermes/observability/page.tsx" }],
+      "categories": ["hermes", "page"]
     },
     {
       "name": "hermes-system-page",
       "type": "registry:page",
       "title": "Hermes System Page",
       "description": "Complete /hermes/system page for gateway, memory, plugins and updates.",
-      "registryDependencies": [
-        "tbachir/hermes-ui/hermes-system-center",
-        "tbachir/hermes-ui/hermes-query"
-      ],
-      "files": [
-        {
-          "path": "hermes-system-page/page.tsx",
-          "type": "registry:page",
-          "target": "~/app/hermes/system/page.tsx"
-        }
-      ],
-      "categories": [
-        "hermes",
-        "page"
-      ]
+      "registryDependencies": ["tbachir/hermes-ui/hermes-system-center", "tbachir/hermes-ui/hermes-query"],
+      "files": [{ "path": "hermes-system-page/page.tsx", "type": "registry:page", "target": "~/app/hermes/system/page.tsx" }],
+      "categories": ["hermes", "page"]
     },
     {
       "name": "hermes-workflows-page",
       "type": "registry:page",
       "title": "Hermes Workflows Page",
       "description": "Full-height workflow editor page using @burner-io/workflow + AI Elements.",
-      "registryDependencies": [
-        "tbachir/hermes-ui/hermes-workflow-builder"
-      ],
-      "files": [
-        {
-          "path": "hermes-workflows-page/page.tsx",
-          "type": "registry:page",
-          "target": "~/app/hermes/workflows/page.tsx"
-        }
-      ],
-      "categories": [
-        "hermes",
-        "page"
-      ]
+      "registryDependencies": ["tbachir/hermes-ui/hermes-workflow-builder"],
+      "files": [{ "path": "hermes-workflows-page/page.tsx", "type": "registry:page", "target": "~/app/hermes/workflows/page.tsx" }],
+      "categories": ["hermes", "page"]
     },
     {
       "name": "hermes-developer-page",
       "type": "registry:page",
       "title": "Hermes Developer Page",
       "description": "Complete safe developer/operator page.",
-      "registryDependencies": [
-        "tbachir/hermes-ui/hermes-developer-center",
-        "tbachir/hermes-ui/hermes-query"
-      ],
-      "files": [
-        {
-          "path": "hermes-developer-page/page.tsx",
-          "type": "registry:page",
-          "target": "~/app/hermes/developer/page.tsx"
-        }
-      ],
-      "categories": [
-        "hermes",
-        "page"
-      ]
+      "registryDependencies": ["tbachir/hermes-ui/hermes-developer-center", "tbachir/hermes-ui/hermes-query"],
+      "files": [{ "path": "hermes-developer-page/page.tsx", "type": "registry:page", "target": "~/app/hermes/developer/page.tsx" }],
+      "categories": ["hermes", "page"]
     },
     {
       "name": "hermes-learning-page",
       "type": "registry:page",
       "title": "Hermes Learning Page",
       "description": "Complete learning, curator and memory page.",
-      "registryDependencies": [
-        "tbachir/hermes-ui/hermes-learning-center",
-        "tbachir/hermes-ui/hermes-query"
-      ],
-      "files": [
-        {
-          "path": "hermes-learning-page/page.tsx",
-          "type": "registry:page",
-          "target": "~/app/hermes/learning/page.tsx"
-        }
-      ],
-      "categories": [
-        "hermes",
-        "page"
-      ]
+      "registryDependencies": ["tbachir/hermes-ui/hermes-learning-center", "tbachir/hermes-ui/hermes-query"],
+      "files": [{ "path": "hermes-learning-page/page.tsx", "type": "registry:page", "target": "~/app/hermes/learning/page.tsx" }],
+      "categories": ["hermes", "page"]
     },
     {
       "name": "hermes-communication-page",
       "type": "registry:page",
       "title": "Hermes Communication Page",
       "description": "Complete messaging, portal and audio page.",
-      "registryDependencies": [
-        "tbachir/hermes-ui/hermes-communication-center",
-        "tbachir/hermes-ui/hermes-query"
-      ],
-      "files": [
-        {
-          "path": "hermes-communication-page/page.tsx",
-          "type": "registry:page",
-          "target": "~/app/hermes/communication/page.tsx"
-        }
-      ],
-      "categories": [
-        "hermes",
-        "page"
-      ]
+      "registryDependencies": ["tbachir/hermes-ui/hermes-communication-center", "tbachir/hermes-ui/hermes-query"],
+      "files": [{ "path": "hermes-communication-page/page.tsx", "type": "registry:page", "target": "~/app/hermes/communication/page.tsx" }],
+      "categories": ["hermes", "page"]
     }
   ]
 }
