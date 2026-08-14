@@ -139,14 +139,32 @@ for (const file of activeFiles) {
 const serverFoundationPath = path.join(root, "registry/foundation/hermes-server/server.ts");
 if (fs.existsSync(serverFoundationPath)) {
   const serverFoundation = fs.readFileSync(serverFoundationPath, "utf8");
-  if (!/baseUrl:\s*env\.url/.test(serverFoundation)) {
-    errors.push("Hermes server foundation must route SDK facades through env.url / HERMES_URL.");
+
+  if (!/createHermesConnectionUnchecked/.test(serverFoundation)) {
+    errors.push("Hermes server foundation must use @burner-io/hermes 0.6 createHermesConnectionUnchecked().");
   }
-  if (!/bearerToken:\s*env\.apiKey/.test(serverFoundation)) {
-    errors.push("Hermes control facade must authenticate with env.apiKey / HERMES_API_KEY.");
+  if (!/baseUrl:\s*env\.url/.test(serverFoundation)) {
+    errors.push("Hermes connection must use env.url / HERMES_URL.");
   }
   if (!/apiKey:\s*env\.apiKey/.test(serverFoundation)) {
-    errors.push("Hermes API Server facade must authenticate with env.apiKey / HERMES_API_KEY.");
+    errors.push("Hermes connection must use env.apiKey / HERMES_API_KEY.");
+  }
+  if (/createHermesClientUnchecked|createApiServerApi/.test(serverFoundation)) {
+    errors.push("Hermes server foundation must not manually construct separate control/API clients on Hermes >=0.6.");
+  }
+  if (!/getHermesConnection\(\)\.control/.test(serverFoundation)) {
+    errors.push("Hermes control compatibility getter must resolve from the unified HermesConnection.");
+  }
+  if (!/getHermesConnection\(\)\.apiServer/.test(serverFoundation)) {
+    errors.push("Hermes API compatibility getter must resolve from the unified HermesConnection.");
+  }
+}
+
+const hermesServerItem = items.find(({ item }) => item.name === "hermes-server")?.item;
+if (hermesServerItem) {
+  const dependencies = hermesServerItem.dependencies ?? [];
+  if (!dependencies.includes("@burner-io/hermes@^0.6.0")) {
+    errors.push("hermes-server must install @burner-io/hermes@^0.6.0.");
   }
 }
 
@@ -202,5 +220,5 @@ if (errors.length) {
 }
 
 console.log(
-  `Registry OK: ${names.size} active items, full control plane restored, one Hermes URL/key enforced.`,
+  `Registry OK: ${names.size} active items, full control plane restored, Hermes 0.6 unified URL/key connection enforced.`,
 );
