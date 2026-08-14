@@ -1,32 +1,46 @@
 # Hermes UI Catalog
 
-V0.4 intentionally mirrors the **stable Hermes API Server machine contract**, not the Web Dashboard backend.
+The catalog mirrors reusable **Hermes-native operator surfaces**. It does not mirror application-domain concepts, and it does not require a second Hermes Dashboard connection.
 
 ## Foundation
 
-| Item | Hermes surface |
+| Item | Purpose |
 |---|---|
-| `hermes-server` | one `HermesApiServerApi` using `HERMES_URL` + `HERMES_API_KEY` |
+| `hermes-server` | one private `HERMES_URL` + `HERMES_API_KEY`, exposed through SDK control/API facades |
 | `hermes-access` | consuming-app authorization seam before Hermes |
-| `hermes-api` | explicit Next.js BFF routes |
-| `hermes-query` | browser facade and TanStack Query hooks |
+| `hermes-api` | explicit protected Next.js BFF routes |
+| `hermes-query` | typed browser facade and TanStack Query hooks |
 
-## Components
+## Focused components
 
-| Item | Source |
+| Area | Items |
 |---|---|
-| `hermes-status-card` | `/health/detailed` + `/v1/capabilities` |
-| `hermes-run-console` | `/v1/runs/*` |
-| `hermes-session-list` | `/api/sessions` |
+| Runtime | `hermes-status-card`, `hermes-run-console`, `hermes-session-list` |
+| Profiles / models | `hermes-profile-switcher`, `hermes-model-manager`, `hermes-provider-manager`, `hermes-credential-manager` |
+| Capabilities | `hermes-skill-manager`, `hermes-mcp-manager`, `hermes-toolset-manager`, `hermes-plugin-manager` |
+| Work | `hermes-kanban-board` |
+| Automation | `hermes-cron-manager`, `hermes-webhook-manager` |
+| State / learning | `hermes-memory-manager`, `hermes-learning-overview` |
+| Observability | `hermes-analytics-overview`, `hermes-log-viewer` |
+| Developer | `hermes-config-overview`, `hermes-env-manager`, `hermes-file-browser`, `hermes-git-status`, `hermes-operations-panel` |
+| Communication | `hermes-messaging-manager`, `hermes-portal-card`, `hermes-audio-console` |
+| System | `hermes-gateway-controls`, `hermes-update-card` |
 
-## Blocks
+## Composed blocks
 
 | Item | Composition |
 |---|---|
-| `hermes-capabilities-center` | `/v1/capabilities`, `/v1/skills`, `/v1/toolsets` |
-| `hermes-models-center` | `/v1/models`, `/api/model/options` |
-| `hermes-system-center` | detailed health + runtime/endpoints contract |
-| `hermes-stack` | supported foundation + components + blocks |
+| `hermes-command-center` | status + profiles + Runs + sessions + Kanban |
+| `hermes-capabilities-center` | skills + MCP + toolsets |
+| `hermes-models-center` | profiles + model assignment + providers + credentials |
+| `hermes-automation-center` | cron + webhooks |
+| `hermes-observability-center` | analytics + sessions |
+| `hermes-developer-center` | config + env metadata + files + Git + diagnostics + logs |
+| `hermes-learning-center` | learning/Curator + memory |
+| `hermes-communication-center` | messaging + Portal + audio |
+| `hermes-system-center` | status + gateway + memory + plugins + updates |
+| `hermes-control-plane` | complete tabbed Hermes administration surface |
+| `hermes-stack` | full foundation + control-plane preset |
 
 ## Pages
 
@@ -35,25 +49,43 @@ V0.4 intentionally mirrors the **stable Hermes API Server machine contract**, no
 - `hermes-sessions-page` → `/hermes/sessions`
 - `hermes-capabilities-page` → `/hermes/capabilities`
 - `hermes-models-page` → `/hermes/models`
+- `hermes-automations-page` → `/hermes/automations`
+- `hermes-observability-page` → `/hermes/observability`
+- `hermes-developer-page` → `/hermes/developer`
+- `hermes-learning-page` → `/hermes/learning`
+- `hermes-communication-page` → `/hermes/communication`
 - `hermes-system-page` → `/hermes/system`
 - `hermes-workflows-page` → `/hermes/workflows`
 
 ## Workflow
 
-`hermes-workflow-builder` is the only workflow item. The workflow graph remains application-owned and calls Hermes through native Runs.
+`hermes-workflow-builder` remains application-owned orchestration through `@burner-io/workflow`. Hermes receives native Run/tool operations, not a new application Workflow domain model.
 
-## Deliberately not installable in V0.4
+## Connection semantics
 
-The previous registry attempted to mirror Dashboard-only/private management surfaces such as profile administration, credentials, cron/webhooks, gateway lifecycle, plugins/updates, config/env/files/Git, learning/memory, messaging/Portal/audio and Kanban.
+The route families used by the catalog can be represented by different namespaces in `@burner-io/hermes`, but the registry treats them as one trusted Hermes connection:
 
-Those sources may remain in repository history while migrating, but they are not part of the active V0.4 registry unless/until an intended machine-facing API Server contract exposes them. Do not route around this by authenticating against the Web Dashboard backend.
+```text
+HERMES_URL + HERMES_API_KEY
+             │
+       ┌─────┴─────┐
+       │           │
+ control facade   API/Run facade
+       │           │
+       └─────┬─────┘
+             ▼
+           Hermes
+```
+
+Do not introduce a second host or credential merely because an SDK method belongs to another facade.
 
 ## Adding a surface
 
-Before adding a new installable Hermes item:
+Before promoting a new item:
 
-1. verify that the connected API Server advertises/supports the operation;
-2. add or reuse the typed seam in `@burner-io/hermes`;
-3. expose a bounded application BFF operation rather than a generic proxy;
-4. add client/query/UI only after the server contract is explicit;
-5. keep application domain concepts outside Hermes.
+1. confirm the operation is genuinely Hermes-native;
+2. reuse or extend the typed seam in `@burner-io/hermes` where appropriate;
+3. route it through the same private Hermes origin/key;
+4. expose a bounded BFF operation instead of a generic proxy;
+5. keep product/domain concepts outside Hermes;
+6. provide loading, error and unavailable states appropriate to the operation.

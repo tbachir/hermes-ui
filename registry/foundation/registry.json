@@ -6,21 +6,41 @@
     {
       "name": "hermes-server",
       "type": "registry:lib",
-      "title": "Hermes API Server Foundation",
-      "description": "Single server-only @burner-io/hermes connection to the private Hermes API Server.",
+      "title": "Hermes Server Foundation",
+      "description": "One private Hermes connection exposed through the SDK control and API Server facades.",
       "author": "Tarek Bachir",
-      "dependencies": ["@burner-io/hermes@^0.5.0", "server-only"],
+      "dependencies": [
+        "@burner-io/hermes@^0.5.0",
+        "server-only"
+      ],
       "envVars": {
         "HERMES_URL": "http://127.0.0.1:8642",
         "HERMES_API_KEY": ""
       },
       "files": [
-        { "path": "hermes-server/env.ts", "type": "registry:lib", "target": "@lib/hermes/env.ts" },
-        { "path": "hermes-server/server.ts", "type": "registry:lib", "target": "@lib/hermes/server.ts" },
-        { "path": "hermes-server/errors.ts", "type": "registry:lib", "target": "@lib/hermes/errors.ts" }
+        {
+          "path": "hermes-server/env.ts",
+          "type": "registry:lib",
+          "target": "@lib/hermes/env.ts"
+        },
+        {
+          "path": "hermes-server/server.ts",
+          "type": "registry:lib",
+          "target": "@lib/hermes/server.ts"
+        },
+        {
+          "path": "hermes-server/errors.ts",
+          "type": "registry:lib",
+          "target": "@lib/hermes/errors.ts"
+        }
       ],
-      "categories": ["hermes", "api-server", "foundation", "server"],
-      "docs": "The browser never talks to Hermes. HERMES_URL and HERMES_API_KEY are server-only. The same API Server exposes its stable /v1/*, selected /api/* and /health/* machine-facing surfaces."
+      "categories": [
+        "hermes",
+        "foundation",
+        "server",
+        "nextjs"
+      ],
+      "docs": "HERMES_URL and HERMES_API_KEY are server-only. Both @burner-io/hermes facades use this same origin and the same API_SERVER_KEY bearer credential. There is no separate Dashboard URL or Dashboard credential in the application contract."
     },
     {
       "name": "hermes-access",
@@ -28,51 +48,102 @@
       "title": "Hermes Application Access Guard",
       "description": "Application-owned authorization seam in front of Hermes route handlers.",
       "author": "Tarek Bachir",
-      "registryDependencies": ["tbachir/hermes-ui/hermes-server"],
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-server"
+      ],
       "envVars": {
         "HERMES_UI_ALLOWED_ROLES": "admin",
-        "HERMES_UI_ALLOWED_USER_IDS": ""
+        "HERMES_UI_ALLOWED_USER_IDS": "",
+        "HERMES_UI_GIT_ROOTS": ""
       },
       "files": [
-        { "path": "hermes-access/access.ts", "type": "registry:lib", "target": "@lib/hermes/access.ts" }
+        {
+          "path": "hermes-access/access.ts",
+          "type": "registry:lib",
+          "target": "@lib/hermes/access.ts"
+        }
       ],
-      "categories": ["hermes", "authz", "security"],
-      "docs": "This block intentionally does not own authentication. The consuming application must expose @/lib/app-user with getAppUser() and an AppUser carrying id, optional role and optional demo. Replace the policy if your app uses a different authorization model."
+      "categories": [
+        "hermes",
+        "authz",
+        "security"
+      ],
+      "docs": "The consuming application owns authentication. Provide @/lib/app-user with getAppUser() and an AppUser carrying id, optional role and optional demo, or replace this policy seam."
     },
     {
       "name": "hermes-api",
       "type": "registry:block",
-      "title": "Hermes API Server BFF Routes",
-      "description": "Explicit Next.js Route Handlers over the stable Hermes API Server surface.",
+      "title": "Hermes Protected API Routes",
+      "description": "Explicit authenticated Next.js Route Handlers for the native Hermes control plane and API Server Runs, all through one private Hermes origin/key.",
       "author": "Tarek Bachir",
-      "registryDependencies": ["tbachir/hermes-ui/hermes-access", "tbachir/hermes-ui/hermes-server"],
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-access",
+        "tbachir/hermes-ui/hermes-server"
+      ],
       "files": [
         { "path": "hermes-api/status-route.ts", "type": "registry:file", "target": "~/app/api/hermes/status/route.ts" },
-        { "path": "hermes-api/models-route.ts", "type": "registry:file", "target": "~/app/api/hermes/models/route.ts" },
-        { "path": "hermes-api/skills-route.ts", "type": "registry:file", "target": "~/app/api/hermes/skills/route.ts" },
-        { "path": "hermes-api/tools-route.ts", "type": "registry:file", "target": "~/app/api/hermes/tools/route.ts" },
+        { "path": "hermes-api/profiles-route.ts", "type": "registry:file", "target": "~/app/api/hermes/profiles/route.ts" },
         { "path": "hermes-api/sessions-route.ts", "type": "registry:file", "target": "~/app/api/hermes/sessions/route.ts" },
+        { "path": "hermes-api/kanban-route.ts", "type": "registry:file", "target": "~/app/api/hermes/kanban/route.ts" },
         { "path": "hermes-api/runs-route.ts", "type": "registry:file", "target": "~/app/api/hermes/runs/route.ts" },
         { "path": "hermes-api/run-route.ts", "type": "registry:file", "target": "~/app/api/hermes/runs/[runId]/route.ts" },
-        { "path": "hermes-api/approval-route.ts", "type": "registry:file", "target": "~/app/api/hermes/runs/[runId]/approval/route.ts" }
+        { "path": "hermes-api/approval-route.ts", "type": "registry:file", "target": "~/app/api/hermes/runs/[runId]/approval/route.ts" },
+        { "path": "hermes-api/skills-route.ts", "type": "registry:file", "target": "~/app/api/hermes/skills/route.ts" },
+        { "path": "hermes-api/models-route.ts", "type": "registry:file", "target": "~/app/api/hermes/models/route.ts" },
+        { "path": "hermes-api/mcp-route.ts", "type": "registry:file", "target": "~/app/api/hermes/mcp/route.ts" },
+        { "path": "hermes-api/tools-route.ts", "type": "registry:file", "target": "~/app/api/hermes/tools/route.ts" },
+        { "path": "hermes-api/cron-route.ts", "type": "registry:file", "target": "~/app/api/hermes/cron/route.ts" },
+        { "path": "hermes-api/memory-route.ts", "type": "registry:file", "target": "~/app/api/hermes/memory/route.ts" },
+        { "path": "hermes-api/providers-route.ts", "type": "registry:file", "target": "~/app/api/hermes/providers/route.ts" },
+        { "path": "hermes-api/credentials-route.ts", "type": "registry:file", "target": "~/app/api/hermes/credentials/route.ts" },
+        { "path": "hermes-api/webhooks-route.ts", "type": "registry:file", "target": "~/app/api/hermes/webhooks/route.ts" },
+        { "path": "hermes-api/plugins-route.ts", "type": "registry:file", "target": "~/app/api/hermes/plugins/route.ts" },
+        { "path": "hermes-api/analytics-route.ts", "type": "registry:file", "target": "~/app/api/hermes/analytics/route.ts" },
+        { "path": "hermes-api/gateway-route.ts", "type": "registry:file", "target": "~/app/api/hermes/gateway/route.ts" },
+        { "path": "hermes-api/updates-route.ts", "type": "registry:file", "target": "~/app/api/hermes/updates/route.ts" },
+        { "path": "hermes-api/config-route.ts", "type": "registry:file", "target": "~/app/api/hermes/config/route.ts" },
+        { "path": "hermes-api/env-route.ts", "type": "registry:file", "target": "~/app/api/hermes/env/route.ts" },
+        { "path": "hermes-api/files-route.ts", "type": "registry:file", "target": "~/app/api/hermes/files/route.ts" },
+        { "path": "hermes-api/git-route.ts", "type": "registry:file", "target": "~/app/api/hermes/git/route.ts" },
+        { "path": "hermes-api/operations-route.ts", "type": "registry:file", "target": "~/app/api/hermes/operations/route.ts" },
+        { "path": "hermes-api/logs-route.ts", "type": "registry:file", "target": "~/app/api/hermes/logs/route.ts" },
+        { "path": "hermes-api/learning-route.ts", "type": "registry:file", "target": "~/app/api/hermes/learning/route.ts" },
+        { "path": "hermes-api/messaging-route.ts", "type": "registry:file", "target": "~/app/api/hermes/messaging/route.ts" },
+        { "path": "hermes-api/portal-route.ts", "type": "registry:file", "target": "~/app/api/hermes/portal/route.ts" },
+        { "path": "hermes-api/audio-route.ts", "type": "registry:file", "target": "~/app/api/hermes/audio/route.ts" }
       ],
-      "categories": ["hermes", "api-server", "bff", "nextjs"],
-      "docs": "No generic Hermes proxy is installed. The base registry deliberately exposes only health/capabilities, model inventory, skills/toolsets, sessions and Runs. Add another route only when it is part of the API Server contract you intend to expose."
+      "categories": [
+        "hermes",
+        "api",
+        "control-plane",
+        "nextjs"
+      ],
+      "docs": "Every browser-facing route remains explicit and allow-listed. The internal SDK may use different namespaces/facades, but every Hermes call resolves through the same HERMES_URL and HERMES_API_KEY. There is intentionally no generic /api/hermes/proxy endpoint."
     },
     {
       "name": "hermes-query",
       "type": "registry:block",
       "title": "Hermes React Query Client",
-      "description": "Typed browser facade, TanStack Query provider and hooks for the bounded Hermes BFF.",
+      "description": "Typed browser API client, query keys, hooks and QueryClient provider for the complete protected Hermes control plane.",
       "author": "Tarek Bachir",
-      "registryDependencies": ["tbachir/hermes-ui/hermes-api"],
-      "dependencies": ["@tanstack/react-query@5.101.4", "@burner-io/hermes@^0.5.0"],
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-api"
+      ],
+      "dependencies": [
+        "@tanstack/react-query@5.101.4",
+        "@burner-io/hermes@^0.5.0"
+      ],
       "files": [
         { "path": "hermes-query/provider.tsx", "type": "registry:component", "target": "@components/hermes/hermes-query-provider.tsx" },
         { "path": "hermes-query/client.ts", "type": "registry:lib", "target": "@lib/hermes/client.ts" },
         { "path": "hermes-query/hooks.ts", "type": "registry:hook", "target": "@hooks/use-hermes.ts" }
       ],
-      "categories": ["hermes", "react-query", "client"]
+      "categories": [
+        "hermes",
+        "react-query",
+        "client",
+        "foundation"
+      ]
     }
   ]
 }

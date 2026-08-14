@@ -4,38 +4,54 @@
   "homepage": "https://github.com/tbachir/hermes-ui",
   "items": [
     {
+      "name": "hermes-command-center",
+      "type": "registry:block",
+      "title": "Hermes Command Center",
+      "description": "Ready-to-use operational cockpit combining status, profiles, runs, sessions and Kanban.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-status-card",
+        "tbachir/hermes-ui/hermes-profile-switcher",
+        "tbachir/hermes-ui/hermes-session-list",
+        "tbachir/hermes-ui/hermes-kanban-board",
+        "tbachir/hermes-ui/hermes-run-console",
+        "tabs"
+      ],
+      "files": [
+        {
+          "path": "hermes-command-center/hermes-command-center.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-command-center.tsx"
+        }
+      ],
+      "categories": ["hermes", "dashboard", "block", "admin"]
+    },
+    {
       "name": "hermes-stack",
       "type": "registry:block",
-      "title": "Hermes API Server Stack",
-      "description": "Opinionated server-only Hermes connection, bounded BFF, TanStack Query facade and supported UI blocks.",
+      "title": "Hermes Full Stack",
+      "description": "Complete reusable Hermes foundation and control plane for a trusted Next.js application.",
       "registryDependencies": [
         "tbachir/hermes-ui/hermes-server",
         "tbachir/hermes-ui/hermes-access",
         "tbachir/hermes-ui/hermes-api",
         "tbachir/hermes-ui/hermes-query",
-        "tbachir/hermes-ui/hermes-status-card",
-        "tbachir/hermes-ui/hermes-run-console",
-        "tbachir/hermes-ui/hermes-session-list",
-        "tbachir/hermes-ui/hermes-capabilities-center",
-        "tbachir/hermes-ui/hermes-models-center",
-        "tbachir/hermes-ui/hermes-system-center"
+        "tbachir/hermes-ui/hermes-command-center",
+        "tbachir/hermes-ui/hermes-control-plane"
       ],
       "files": [],
-      "categories": ["hermes", "api-server", "starter", "nextjs"],
-      "docs": "The consuming app owns auth/backend policy. Provide @/lib/app-user, set HERMES_URL and HERMES_API_KEY server-side, and keep Hermes unreachable from the browser/public network."
+      "categories": ["hermes", "starter", "control-plane", "nextjs"],
+      "docs": "The registry is auth/backend agnostic. Implement @/lib/app-user in the consuming application, set server-only HERMES_URL and HERMES_API_KEY, then render the Hermes control plane behind your own authorization boundary."
     },
     {
       "name": "hermes-capabilities-center",
       "type": "registry:block",
       "title": "Hermes Capabilities Center",
-      "description": "Advertised API capabilities plus read-only skills and toolsets from the API Server.",
+      "description": "Skills, MCP servers and native Hermes toolsets in one ready-to-use block.",
       "registryDependencies": [
-        "tbachir/hermes-ui/hermes-query",
-        "badge",
-        "card",
-        "skeleton"
+        "tbachir/hermes-ui/hermes-skill-manager",
+        "tbachir/hermes-ui/hermes-mcp-manager",
+        "tbachir/hermes-ui/hermes-toolset-manager"
       ],
-      "dependencies": ["lucide-react"],
       "files": [
         {
           "path": "hermes-capabilities-center/hermes-capabilities-center.tsx",
@@ -43,21 +59,19 @@
           "target": "@components/hermes/hermes-capabilities-center.tsx"
         }
       ],
-      "categories": ["hermes", "api-server", "capabilities", "skills", "toolsets"]
+      "categories": ["hermes", "skills", "mcp", "tools", "block"]
     },
     {
       "name": "hermes-models-center",
       "type": "registry:block",
       "title": "Hermes Models Center",
-      "description": "OpenAI-compatible model list and rich Hermes model options from the API Server.",
+      "description": "Profiles, model assignment, providers and credential pool management.",
       "registryDependencies": [
-        "tbachir/hermes-ui/hermes-query",
-        "badge",
-        "button",
-        "card",
-        "skeleton"
+        "tbachir/hermes-ui/hermes-profile-switcher",
+        "tbachir/hermes-ui/hermes-model-manager",
+        "tbachir/hermes-ui/hermes-provider-manager",
+        "tbachir/hermes-ui/hermes-credential-manager"
       ],
-      "dependencies": ["lucide-react"],
       "files": [
         {
           "path": "hermes-models-center/hermes-models-center.tsx",
@@ -65,20 +79,38 @@
           "target": "@components/hermes/hermes-models-center.tsx"
         }
       ],
-      "categories": ["hermes", "api-server", "models"]
+      "categories": ["hermes", "models", "providers", "credentials", "block"]
+    },
+    {
+      "name": "hermes-automation-center",
+      "type": "registry:block",
+      "title": "Hermes Automation Center",
+      "description": "Native Hermes cron jobs and webhook subscriptions.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-cron-manager",
+        "tbachir/hermes-ui/hermes-webhook-manager"
+      ],
+      "files": [
+        {
+          "path": "hermes-automation-center/hermes-automation-center.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-automation-center.tsx"
+        }
+      ],
+      "categories": ["hermes", "automation", "cron", "webhooks", "block"]
     },
     {
       "name": "hermes-system-center",
       "type": "registry:block",
       "title": "Hermes System Center",
-      "description": "Detailed API Server readiness and machine-readable contract inspection.",
+      "description": "Status, gateway lifecycle, memory, plugins and update controls.",
       "registryDependencies": [
-        "tbachir/hermes-ui/hermes-query",
-        "badge",
-        "card",
-        "skeleton"
+        "tbachir/hermes-ui/hermes-status-card",
+        "tbachir/hermes-ui/hermes-gateway-controls",
+        "tbachir/hermes-ui/hermes-memory-manager",
+        "tbachir/hermes-ui/hermes-plugin-manager",
+        "tbachir/hermes-ui/hermes-update-card"
       ],
-      "dependencies": ["lucide-react"],
       "files": [
         {
           "path": "hermes-system-center/hermes-system-center.tsx",
@@ -86,7 +118,110 @@
           "target": "@components/hermes/hermes-system-center.tsx"
         }
       ],
-      "categories": ["hermes", "api-server", "health", "contract"]
+      "categories": ["hermes", "system", "operations", "block"]
+    },
+    {
+      "name": "hermes-observability-center",
+      "type": "registry:block",
+      "title": "Hermes Observability Center",
+      "description": "Native Hermes analytics and recent session activity.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-analytics-overview",
+        "tbachir/hermes-ui/hermes-session-list"
+      ],
+      "files": [
+        {
+          "path": "hermes-observability-center/hermes-observability-center.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-observability-center.tsx"
+        }
+      ],
+      "categories": ["hermes", "analytics", "sessions", "observability", "block"]
+    },
+    {
+      "name": "hermes-control-plane",
+      "type": "registry:block",
+      "title": "Hermes Control Plane",
+      "description": "Full ready-to-use Hermes control plane spanning command, capabilities, models, automation, observability, developer, learning, communication and system surfaces.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-command-center",
+        "tbachir/hermes-ui/hermes-capabilities-center",
+        "tbachir/hermes-ui/hermes-models-center",
+        "tbachir/hermes-ui/hermes-automation-center",
+        "tbachir/hermes-ui/hermes-observability-center",
+        "tbachir/hermes-ui/hermes-system-center",
+        "tbachir/hermes-ui/hermes-developer-center",
+        "tbachir/hermes-ui/hermes-learning-center",
+        "tbachir/hermes-ui/hermes-communication-center",
+        "tabs"
+      ],
+      "files": [
+        {
+          "path": "hermes-control-plane/hermes-control-plane.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-control-plane.tsx"
+        }
+      ],
+      "categories": ["hermes", "control-plane", "dashboard", "block"]
+    },
+    {
+      "name": "hermes-developer-center",
+      "type": "registry:block",
+      "title": "Hermes Developer Center",
+      "description": "Safe developer/operator surfaces for config, env metadata, managed files, Git, diagnostics and logs.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-config-overview",
+        "tbachir/hermes-ui/hermes-env-manager",
+        "tbachir/hermes-ui/hermes-file-browser",
+        "tbachir/hermes-ui/hermes-git-status",
+        "tbachir/hermes-ui/hermes-operations-panel",
+        "tbachir/hermes-ui/hermes-log-viewer"
+      ],
+      "files": [
+        {
+          "path": "hermes-developer-center/hermes-developer-center.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-developer-center.tsx"
+        }
+      ],
+      "categories": ["hermes", "developer", "operations", "block"]
+    },
+    {
+      "name": "hermes-learning-center",
+      "type": "registry:block",
+      "title": "Hermes Learning Center",
+      "description": "Native Hermes learning starmap, Curator and memory management.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-learning-overview",
+        "tbachir/hermes-ui/hermes-memory-manager"
+      ],
+      "files": [
+        {
+          "path": "hermes-learning-center/hermes-learning-center.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-learning-center.tsx"
+        }
+      ],
+      "categories": ["hermes", "learning", "memory", "block"]
+    },
+    {
+      "name": "hermes-communication-center",
+      "type": "registry:block",
+      "title": "Hermes Communication Center",
+      "description": "Native messaging, Portal and audio surfaces.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-messaging-manager",
+        "tbachir/hermes-ui/hermes-portal-card",
+        "tbachir/hermes-ui/hermes-audio-console"
+      ],
+      "files": [
+        {
+          "path": "hermes-communication-center/hermes-communication-center.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-communication-center.tsx"
+        }
+      ],
+      "categories": ["hermes", "messaging", "audio", "portal", "block"]
     }
   ]
 }

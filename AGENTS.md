@@ -7,26 +7,28 @@ This repository contains reusable **Hermes-facing** UI/BFF bricks. It is not a f
 - `@burner-io/hermes` owns Hermes-native contracts/transports.
 - `@burner-io/workflow` owns app-side orchestration.
 - The consuming application owns authentication, authorization, backend/data, public API and product/domain concepts.
-- Hermes must remain private infrastructure; browsers must not receive Hermes credentials or communicate directly with Hermes.
+- Hermes remains private infrastructure; browsers must not receive Hermes credentials or communicate directly with Hermes.
 - Never introduce `NEXT_PUBLIC_HERMES_*` credentials.
 - Never introduce a generic `/api/hermes/proxy`.
 
-## Hermes connection
+## One Hermes connection
 
-The active registry uses one machine connection only:
+Installable items use only:
 
 ```dotenv
 HERMES_URL=
 HERMES_API_KEY=
 ```
 
-Do not reintroduce `HERMES_DASHBOARD_URL`, Dashboard session tokens, duplicate API Server URLs or Web Dashboard authentication into installable registry items.
+`@burner-io/hermes` may expose different client facades/namespaces for native control operations and Runs/API resources. That does **not** justify separate application URLs or credentials. Every facade must resolve through the same private `HERMES_URL` and the same `HERMES_API_KEY` Bearer credential.
 
-The intended machine-facing contract is the Hermes API Server (`/v1/*`, selected `/api/*`, `/health/*`) under `API_SERVER_KEY` bearer authentication.
+Do not reintroduce a second Dashboard-specific connection model.
 
-## API capability rule
+## Preserve the control plane
 
-Treat `/v1/capabilities` as the runtime source of truth for optional features. Do not silently fall back to private/Dashboard routes if the API Server does not advertise a capability.
+The registry intentionally includes the complete reusable Hermes operator UI: command/status, profiles, Runs, sessions, Kanban, skills, MCP, tools, models/providers/credentials, automation, observability, developer operations, learning/memory, communication and system controls.
+
+Do not remove a UI family merely because one introspection endpoint does not enumerate it. Handle genuine runtime/version unavailability explicitly in the relevant adapter/UI.
 
 ## Application access seam
 
@@ -38,13 +40,13 @@ Promote a change from the app template to this registry only when it is:
 
 1. Hermes-specific;
 2. reusable across applications;
-3. backed by an intended API Server contract;
+3. faithful to Hermes-native concepts;
 4. safe behind application-owned authorization;
 5. independent from product/domain data.
 
 ## Workflow
 
-Workflow definitions remain application-owned. A workflow may call a native Hermes Run; Hermes must not learn a new `Workflow`, `Project`, `Spec` or other application concept because of the registry.
+Workflow definitions remain application-owned. A workflow may call native Hermes operations/Runs; Hermes must not learn a new `Workflow`, `Project`, `Spec` or other application concept because of the registry.
 
 ## Source ownership
 
