@@ -1,21 +1,20 @@
 import { NextResponse } from "next/server";
-
 import { requireHermesAccess } from "@/lib/hermes/access";
 import { hermesRouteError } from "@/lib/hermes/errors";
-import { getHermesApiServer } from "@/lib/hermes/server";
+
+import { getHermesManagementClient } from "@/lib/hermes/server";
 
 export async function GET() {
   const access = await requireHermesAccess();
   if (!access.ok) return access.response;
 
   try {
-    const hermes = getHermesApiServer();
-    const [health, capabilities] = await Promise.all([
-      hermes.health(true),
-      hermes.capabilities(),
+    const client = getHermesManagementClient();
+    const [status, stats] = await Promise.all([
+      client.system.status(),
+      client.system.stats(),
     ]);
-
-    return NextResponse.json({ health, capabilities });
+    return NextResponse.json({ status, stats });
   } catch (error) {
     return hermesRouteError(error);
   }

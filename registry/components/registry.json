@@ -6,16 +6,18 @@
     {
       "name": "hermes-status-card",
       "type": "registry:component",
-      "title": "Hermes API Server Status",
-      "description": "Detailed health + advertised API capabilities for the private Hermes API Server.",
+      "title": "Hermes Status Card",
+      "description": "Gateway health, Hermes version and active-session summary.",
       "registryDependencies": [
         "tbachir/hermes-ui/hermes-query",
+        "card",
         "badge",
         "button",
-        "card",
         "skeleton"
       ],
-      "dependencies": ["lucide-react"],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
       "files": [
         {
           "path": "hermes-status-card/hermes-status-card.tsx",
@@ -23,46 +25,50 @@
           "target": "@components/hermes/hermes-status-card.tsx"
         }
       ],
-      "categories": ["hermes", "api-server", "status"]
+      "categories": [
+        "hermes",
+        "status",
+        "dashboard"
+      ]
     },
     {
-      "name": "hermes-run-console",
+      "name": "hermes-profile-switcher",
       "type": "registry:component",
-      "title": "Hermes Run Console",
-      "description": "Interactive native Runs console with session continuity, approvals and stop controls.",
+      "title": "Hermes Profile Switcher",
+      "description": "Select the active native Hermes profile with provider/model metadata.",
       "registryDependencies": [
         "tbachir/hermes-ui/hermes-query",
-        "badge",
-        "button",
         "card",
-        "separator",
-        "textarea",
-        "https://elements.ai-sdk.dev/api/registry/message.json"
+        "badge",
+        "select",
+        "skeleton"
       ],
-      "dependencies": ["lucide-react"],
       "files": [
         {
-          "path": "hermes-run-console/hermes-run-console.tsx",
+          "path": "hermes-profile-switcher/hermes-profile-switcher.tsx",
           "type": "registry:component",
-          "target": "@components/hermes/hermes-run-console.tsx"
+          "target": "@components/hermes/hermes-profile-switcher.tsx"
         }
       ],
-      "categories": ["hermes", "api-server", "runs", "ai"]
+      "categories": [
+        "hermes",
+        "profiles",
+        "dashboard"
+      ]
     },
     {
       "name": "hermes-session-list",
       "type": "registry:component",
       "title": "Hermes Session List",
-      "description": "Recent API Server sessions with model, tokens and activity metadata.",
+      "description": "Recent Hermes sessions with model, source, token counts and activity state.",
       "registryDependencies": [
         "tbachir/hermes-ui/hermes-query",
+        "card",
         "badge",
         "button",
-        "card",
-        "skeleton",
-        "table"
+        "table",
+        "skeleton"
       ],
-      "dependencies": ["lucide-react"],
       "files": [
         {
           "path": "hermes-session-list/hermes-session-list.tsx",
@@ -70,7 +76,725 @@
           "target": "@components/hermes/hermes-session-list.tsx"
         }
       ],
-      "categories": ["hermes", "api-server", "sessions"]
+      "categories": [
+        "hermes",
+        "sessions",
+        "dashboard"
+      ]
+    },
+    {
+      "name": "hermes-kanban-board",
+      "type": "registry:component",
+      "title": "Hermes Kanban Board",
+      "description": "Read-only board view of native Hermes Kanban task columns.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "skeleton"
+      ],
+      "files": [
+        {
+          "path": "hermes-kanban-board/hermes-kanban-board.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-kanban-board.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "kanban",
+        "dashboard"
+      ]
+    },
+    {
+      "name": "hermes-run-console",
+      "type": "registry:component",
+      "title": "Hermes Run Console",
+      "description": "Conversation-like native Hermes API Server Run UI with session continuity, approval and stop controls.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "textarea",
+        "separator",
+        "https://elements.ai-sdk.dev/api/registry/message.json"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-run-console/hermes-run-console.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-run-console.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "run",
+        "ai",
+        "conversation"
+      ]
+    },
+    {
+      "name": "hermes-skill-manager",
+      "type": "registry:component",
+      "title": "Hermes Skill Manager",
+      "description": "Search, inspect and enable or disable native Hermes skills.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "input",
+        "switch",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-skill-manager/hermes-skill-manager.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-skill-manager.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "skills",
+        "management"
+      ]
+    },
+    {
+      "name": "hermes-model-manager",
+      "type": "registry:component",
+      "title": "Hermes Model Manager",
+      "description": "Inspect and switch the native Hermes main model/provider assignment.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "select",
+        "skeleton"
+      ],
+      "files": [
+        {
+          "path": "hermes-model-manager/hermes-model-manager.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-model-manager.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "models",
+        "providers"
+      ]
+    },
+    {
+      "name": "hermes-mcp-manager",
+      "type": "registry:component",
+      "title": "Hermes MCP Manager",
+      "description": "Create, test, toggle and remove Hermes MCP servers.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "dialog",
+        "input",
+        "label",
+        "switch",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-mcp-manager/hermes-mcp-manager.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-mcp-manager.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "mcp",
+        "tools"
+      ]
+    },
+    {
+      "name": "hermes-toolset-manager",
+      "type": "registry:component",
+      "title": "Hermes Toolset Manager",
+      "description": "Enable native Hermes toolsets and select the terminal backend.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "select",
+        "switch",
+        "skeleton"
+      ],
+      "files": [
+        {
+          "path": "hermes-toolset-manager/hermes-toolset-manager.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-toolset-manager.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "tools",
+        "terminal"
+      ]
+    },
+    {
+      "name": "hermes-cron-manager",
+      "type": "registry:component",
+      "title": "Hermes Cron Manager",
+      "description": "Create, trigger, pause, resume and remove native Hermes scheduled jobs.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "dialog",
+        "input",
+        "label",
+        "textarea",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-cron-manager/hermes-cron-manager.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-cron-manager.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "cron",
+        "automation"
+      ]
+    },
+    {
+      "name": "hermes-memory-manager",
+      "type": "registry:component",
+      "title": "Hermes Memory Manager",
+      "description": "Inspect memory providers, switch the active provider and reset builtin memory.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "select",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-memory-manager/hermes-memory-manager.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-memory-manager.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "memory",
+        "settings"
+      ]
+    },
+    {
+      "name": "hermes-provider-manager",
+      "type": "registry:component",
+      "title": "Hermes Provider Manager",
+      "description": "Manage Hermes OAuth providers and activate custom model endpoints.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-provider-manager/hermes-provider-manager.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-provider-manager.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "providers",
+        "oauth"
+      ]
+    },
+    {
+      "name": "hermes-credential-manager",
+      "type": "registry:component",
+      "title": "Hermes Credential Pool",
+      "description": "Inspect and manage server-side Hermes provider credentials without exposing secrets to the client bundle.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "dialog",
+        "input",
+        "label",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-credential-manager/hermes-credential-manager.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-credential-manager.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "credentials",
+        "security"
+      ]
+    },
+    {
+      "name": "hermes-webhook-manager",
+      "type": "registry:component",
+      "title": "Hermes Webhook Manager",
+      "description": "Enable Hermes webhooks and toggle native subscriptions.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "switch",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-webhook-manager/hermes-webhook-manager.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-webhook-manager.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "webhooks",
+        "automation"
+      ]
+    },
+    {
+      "name": "hermes-plugin-manager",
+      "type": "registry:component",
+      "title": "Hermes Plugin Manager",
+      "description": "Inspect, enable, disable and rescan Hermes plugins.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "switch",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-plugin-manager/hermes-plugin-manager.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-plugin-manager.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "plugins",
+        "settings"
+      ]
+    },
+    {
+      "name": "hermes-analytics-overview",
+      "type": "registry:component",
+      "title": "Hermes Analytics Overview",
+      "description": "Usage, cost, model and skill metrics from native Hermes analytics.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-analytics-overview/hermes-analytics-overview.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-analytics-overview.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "analytics",
+        "observability"
+      ]
+    },
+    {
+      "name": "hermes-gateway-controls",
+      "type": "registry:component",
+      "title": "Hermes Gateway Controls",
+      "description": "Start, restart and stop the Hermes gateway from an authenticated control surface.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-gateway-controls/hermes-gateway-controls.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-gateway-controls.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "gateway",
+        "operations"
+      ]
+    },
+    {
+      "name": "hermes-update-card",
+      "type": "registry:component",
+      "title": "Hermes Update Card",
+      "description": "Check Hermes backend version drift and apply supported updates.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-update-card/hermes-update-card.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-update-card.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "updates",
+        "operations"
+      ]
+    },
+    {
+      "name": "hermes-config-overview",
+      "type": "registry:component",
+      "title": "Hermes Config Overview",
+      "description": "Read-only safe subset of native Hermes configuration.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-config-overview/hermes-config-overview.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-config-overview.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "config",
+        "developer"
+      ]
+    },
+    {
+      "name": "hermes-env-manager",
+      "type": "registry:component",
+      "title": "Hermes Environment Manager",
+      "description": "Redacted Hermes environment metadata with explicit set/remove operations and no secret reveal.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "dialog",
+        "input",
+        "label",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-env-manager/hermes-env-manager.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-env-manager.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "env",
+        "security",
+        "developer"
+      ]
+    },
+    {
+      "name": "hermes-file-browser",
+      "type": "registry:component",
+      "title": "Hermes Managed File Browser",
+      "description": "Read-only browser for the native managed-files surface.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "button",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-file-browser/hermes-file-browser.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-file-browser.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "files",
+        "developer"
+      ]
+    },
+    {
+      "name": "hermes-git-status",
+      "type": "registry:component",
+      "title": "Hermes Git Status",
+      "description": "Read-only Git status, branches and worktrees restricted by HERMES_UI_GIT_ROOTS.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "input"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-git-status/hermes-git-status.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-git-status.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "git",
+        "developer"
+      ]
+    },
+    {
+      "name": "hermes-operations-panel",
+      "type": "registry:component",
+      "title": "Hermes Operations Panel",
+      "description": "Allow-listed Hermes doctor and security-audit diagnostics.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "button"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-operations-panel/hermes-operations-panel.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-operations-panel.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "operations",
+        "security",
+        "developer"
+      ]
+    },
+    {
+      "name": "hermes-log-viewer",
+      "type": "registry:component",
+      "title": "Hermes Log Viewer",
+      "description": "Bounded read-only Hermes log viewer with level and search filters.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "button",
+        "input",
+        "select"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-log-viewer/hermes-log-viewer.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-log-viewer.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "logs",
+        "observability",
+        "developer"
+      ]
+    },
+    {
+      "name": "hermes-learning-overview",
+      "type": "registry:component",
+      "title": "Hermes Learning Overview",
+      "description": "Native starmap and Curator lifecycle controls.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-learning-overview/hermes-learning-overview.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-learning-overview.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "learning",
+        "curator"
+      ]
+    },
+    {
+      "name": "hermes-messaging-manager",
+      "type": "registry:component",
+      "title": "Hermes Messaging Manager",
+      "description": "Native messaging platforms, pairing counts, tests and enable toggles.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "switch",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-messaging-manager/hermes-messaging-manager.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-messaging-manager.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "messaging",
+        "communication"
+      ]
+    },
+    {
+      "name": "hermes-portal-card",
+      "type": "registry:component",
+      "title": "Hermes Portal Card",
+      "description": "Native Hermes Portal login, feature and subscription status.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-portal-card/hermes-portal-card.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-portal-card.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "portal",
+        "communication"
+      ]
+    },
+    {
+      "name": "hermes-audio-console",
+      "type": "registry:component",
+      "title": "Hermes Audio Console",
+      "description": "Native Hermes text-to-speech and voice availability console.",
+      "registryDependencies": [
+        "tbachir/hermes-ui/hermes-query",
+        "card",
+        "badge",
+        "button",
+        "textarea",
+        "skeleton"
+      ],
+      "dependencies": [
+        "lucide-react@1.28.0"
+      ],
+      "files": [
+        {
+          "path": "hermes-audio-console/hermes-audio-console.tsx",
+          "type": "registry:component",
+          "target": "@components/hermes/hermes-audio-console.tsx"
+        }
+      ],
+      "categories": [
+        "hermes",
+        "audio",
+        "communication"
+      ]
     }
   ]
 }
