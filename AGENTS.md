@@ -1,61 +1,51 @@
 # Hermes UI Registry — Agent Instructions
 
-This repository is the reusable UI/application layer around `@burner-io/hermes`.
-It is a shadcn GitHub source registry, not a fork of Hermes and not a place to
-invent replacement Hermes domain models.
+This repository contains reusable **Hermes-facing** UI/BFF bricks. It is not a fork of Hermes, not an application backend, and not a place to invent replacement Hermes domain models.
 
-## Boundaries
+## Hard boundaries
 
-- Preserve native Hermes concepts and raw field names when a component talks to
-  Hermes (`Profile`, `Session`, Kanban `Task`, API Server `Run`, etc.).
-- Application-only concepts belong in this registry or the consuming app, never
-  in `@burner-io/hermes`.
-- Browser components never receive Hermes credentials. Browser code talks only
-  to narrow authenticated Next.js endpoints.
-- Keep `HERMES_*` secrets server-only. Never introduce `NEXT_PUBLIC_HERMES_*`.
-- Never expose Supabase secret/service-role keys to client components.
+- `@burner-io/hermes` owns Hermes-native contracts/transports.
+- `@burner-io/workflow` owns app-side orchestration.
+- The consuming application owns authentication, authorization, backend/data, public API and product/domain concepts.
+- Hermes must remain private infrastructure; browsers must not receive Hermes credentials or communicate directly with Hermes.
+- Never introduce `NEXT_PUBLIC_HERMES_*` credentials.
+- Never introduce a generic `/api/hermes/proxy`.
 
-## Default target stack
+## Hermes connection
 
-- Next.js App Router, current Next.js 16 conventions (`proxy.ts`).
-- React 19.
-- Tailwind CSS 4.
-- shadcn/ui on Radix primitives when AI Elements are involved.
-- Supabase SSR for authentication and app-owned persistence.
-- TanStack Query for browser-side Hermes server state.
-- AI Elements for model-generated markdown and AI-specific UI.
+The active registry uses one machine connection only:
 
-## Registry layering
-
-1. `foundation`: auth, server transport, access guards, API boundaries, hooks.
-2. `components`: focused reusable Hermes surfaces.
-3. `blocks`: composed production-oriented features.
-4. `pages`: optional ready-made Next.js route compositions.
-5. `workflow`: app-owned workflow editing/runtime integrations.
-
-Prefer a small component plus a composed block over one giant registry item.
-Every block must declare its dependencies through `registryDependencies`.
-Same-repository dependencies must use the full `tbachir/hermes-ui/<item>`
-address, not a bare item name.
-
-## Quality gate
-
-Before committing:
-
-```bash
-node scripts/check-registry.mjs
+```dotenv
+HERMES_URL=
+HERMES_API_KEY=
 ```
 
-Also typecheck or at minimum parse every new TypeScript/TSX file and verify any
-Hermes-facing code against the current `@burner-io/hermes` declarations. When the
-shadcn CLI is available, use `shadcn view` / `--dry-run` before calling an item
-stable.
+Do not reintroduce `HERMES_DASHBOARD_URL`, Dashboard session tokens, duplicate API Server URLs or Web Dashboard authentication into installable registry items.
 
-## UI conventions
+The intended machine-facing contract is the Hermes API Server (`/v1/*`, selected `/api/*`, `/health/*`) under `API_SERVER_KEY` bearer authentication.
 
-- Use shadcn primitives instead of raw controls where a primitive exists.
-- Use AI Elements `MessageResponse` for Hermes/model generated markdown.
-- Provide loading, empty and error states.
-- Keep operational interfaces compact, accessible and dark-mode compatible.
-- Do not put secrets, raw authorization headers, or privileged tokens into UI
-  state, props, logs or browser storage.
+## API capability rule
+
+Treat `/v1/capabilities` as the runtime source of truth for optional features. Do not silently fall back to private/Dashboard routes if the API Server does not advertise a capability.
+
+## Application access seam
+
+`hermes-access` may depend on the consuming app's `@/lib/app-user` seam, but it must not own Better Auth, Payload, Supabase or another identity/backend stack. The reference template can implement that seam however it chooses.
+
+## Registry promotion rule
+
+Promote a change from the app template to this registry only when it is:
+
+1. Hermes-specific;
+2. reusable across applications;
+3. backed by an intended API Server contract;
+4. safe behind application-owned authorization;
+5. independent from product/domain data.
+
+## Workflow
+
+Workflow definitions remain application-owned. A workflow may call a native Hermes Run; Hermes must not learn a new `Workflow`, `Project`, `Spec` or other application concept because of the registry.
+
+## Source ownership
+
+shadcn items are copied into consuming applications. Keep them readable, explicit and easy to audit. Prefer bounded Route Handlers and typed SDK operations over hidden transport magic.

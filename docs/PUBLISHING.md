@@ -1,47 +1,57 @@
 # Publishing
 
-`hermes-ui` is designed first as a shadcn GitHub source registry. A public GitHub
-repository with the root `registry.json` is enough; generated `/public/r/*.json`
-files are optional.
+`hermes-ui` is a shadcn GitHub source registry. The public repository and root `registry.json` are sufficient; generated `/public/r/*.json` files are optional.
 
-## First publication
-
-Create an empty public repository named `hermes-ui` under `tbachir`, then from
-this checkout:
+## Validate before release
 
 ```bash
-git remote add origin git@github.com:tbachir/hermes-ui.git
-git push -u origin main
+npm run registry:check
+npm run registry:build
 ```
 
-After publication, inspect before installing:
+Then inspect representative items before installing them into another application:
 
 ```bash
 pnpm dlx shadcn@latest list tbachir/hermes-ui
-pnpm dlx shadcn@latest view tbachir/hermes-ui/hermes-command-center
-pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-command-center --dry-run
+pnpm dlx shadcn@latest view tbachir/hermes-ui/hermes-stack
+pnpm dlx shadcn@latest view tbachir/hermes-ui/hermes-run-console
+pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-stack --dry-run
 ```
 
-## Releases
+## V0.4 release
 
-Once an initial release is stable, tag it and prefer pinned install examples for
-reproducibility:
+V0.4 is the first release whose active catalog is based exclusively on the private Hermes API Server machine contract:
+
+```dotenv
+HERMES_URL=
+HERMES_API_KEY=
+```
+
+Before tagging, confirm no active registry item depends on Dashboard/session-auth variables or Dashboard-only endpoints.
 
 ```bash
-git tag v0.2.0
-git push origin v0.2.0
-pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-command-center#v0.2.0
+git tag v0.4.0
+git push origin v0.4.0
 ```
 
-Same-repository `registryDependencies` may also be pinned when the registry moves
-from active development to stable releases.
+For reproducible consumers:
+
+```bash
+pnpm dlx shadcn@latest add tbachir/hermes-ui/hermes-stack#v0.4.0
+```
+
+Same-repository `registryDependencies` can be pinned to the matching release tag once the V0.4 catalog is stable.
+
+## Reference template
+
+`templates/burner-hermes-app/template.json` pins the compatible standalone application revision. Updating that pin does not publish the private template source into this public repository.
+
+If the standalone template is later intentionally made public, document that decision separately rather than silently copying its application code into the registry.
 
 ## Optional static registry build
-
-A hosted static registry can still be produced when needed:
 
 ```bash
 pnpm dlx shadcn@latest build ./registry.json -o ./public/r
 ```
 
-The GitHub source-registry path does not require this build step.
+The GitHub source-registry path does not require the static build step.

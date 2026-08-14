@@ -1,49 +1,19 @@
 import "server-only";
 
 export interface HermesServerEnv {
-  dashboardUrl?: string;
-  sessionToken?: string;
-  bearerToken?: string;
-  apiServerUrl?: string;
-  apiServerKey?: string;
-  defaultProfile?: string;
+  url: string;
+  apiKey: string;
 }
 
-function value(name: string): string | undefined {
+function required(name: "HERMES_URL" | "HERMES_API_KEY"): string {
   const current = process.env[name]?.trim();
-  return current ? current : undefined;
+  if (!current) throw new Error(`${name} is required`);
+  return current;
 }
 
 export function getHermesServerEnv(): HermesServerEnv {
-  const dashboardUrl = value("HERMES_DASHBOARD_URL");
-  const sessionToken = value("HERMES_SESSION_TOKEN");
-  const bearerToken = value("HERMES_BEARER_TOKEN");
-  const apiServerUrl = value("HERMES_API_SERVER_URL");
-  const apiServerKey = value("HERMES_API_SERVER_KEY");
-  const defaultProfile = value("HERMES_DEFAULT_PROFILE");
-
   return {
-    ...(dashboardUrl ? { dashboardUrl } : {}),
-    ...(sessionToken ? { sessionToken } : {}),
-    ...(bearerToken ? { bearerToken } : {}),
-    ...(apiServerUrl ? { apiServerUrl } : {}),
-    ...(apiServerKey ? { apiServerKey } : {}),
-    ...(defaultProfile ? { defaultProfile } : {}),
+    url: required("HERMES_URL").replace(/\/+$/, ""),
+    apiKey: required("HERMES_API_KEY"),
   };
-}
-
-export function requireHermesDashboardUrl(): string {
-  const url = getHermesServerEnv().dashboardUrl;
-  if (!url) {
-    throw new Error("HERMES_DASHBOARD_URL is not configured");
-  }
-  return url;
-}
-
-export function requireHermesApiServerUrl(): string {
-  const url = getHermesServerEnv().apiServerUrl;
-  if (!url) {
-    throw new Error("HERMES_API_SERVER_URL is not configured");
-  }
-  return url;
 }

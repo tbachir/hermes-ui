@@ -1,19 +1,19 @@
 # Changelog
 
-## 0.2.0 — 2026-08-13
+## 0.4.0 - 2026-08-14
 
-- migrated SDK imports from the former internal `@tbachir/*` names to `@burner-io/*`
-- expanded protected Hermes API routes across the native control-plane catalog
-- expanded browser API and TanStack Query hooks
-- added focused managers for skills, models, MCP, tools, cron, memory, providers, credentials, webhooks, plugins, analytics, gateway and updates
-- added safe developer surfaces for config, redacted environment metadata, managed files, allow-listed Git, diagnostics and bounded logs
-- added learning/Curator, messaging, Portal and audio surfaces
-- added capabilities, models, automation, observability, developer, learning, communication, system and full control-plane blocks
-- added dedicated Hermes App Router pages
-- expanded registry from 14 to **55 installable items**
+- Collapsed Hermes runtime configuration to `HERMES_URL` + `HERMES_API_KEY`.
+- Removed Web Dashboard/session-auth concepts from the active installable registry.
+- Rebuilt the server foundation around one `HermesApiServerApi` instance.
+- Rebased status, models, skills, toolsets and sessions on the API Server machine contract.
+- Reduced the active UI catalog to API Server-backed surfaces: health/capabilities, Runs, sessions, models, skills and toolsets.
+- Made the default application access guard auth-provider agnostic through `@/lib/app-user`.
+- Added Runs and Sessions pages and simplified the Hermes overview page.
+- Rewrote architecture/security/catalog documentation around private server-to-server Hermes access.
+- Added a versioned reference to the standalone `burner-hermes-app-template` without duplicating its private source into this public repository.
 
-## 0.1.0 — 2026-08-13
+## 0.2.0 - 2026-08-13
 
-- initial Supabase/Next/Hermes foundation
-- status, profiles, sessions, Kanban and Run UI
-- Command Center and workflow builder
+- Initial public registry snapshot with the earlier Dashboard + API Server split.
+
+> The unreleased/local V0.3 Payload/Better Auth experiment informed the app template, but application backend/auth choices are no longer part of the Hermes registry contract in V0.4.

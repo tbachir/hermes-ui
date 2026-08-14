@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "burner-hermes-app-template",
+  "repository": "tbachir/burner-hermes-app-template",
+  "revision": "a7769bf1f93b63f9a523b2dc34748685b25a7997",
+  "hermesUi": "0.4.0",
+  "hermes": "^0.5.0",
+  "workflow": "^0.1.0",
+  "hermesConnection": {
+    "environment": ["HERMES_URL", "HERMES_API_KEY"],
+    "publicBrowserAccess": false
+  },
+  "notes": "Version pin only. The standalone template remains its own source of truth and is not duplicated into this public registry repository."
+}
