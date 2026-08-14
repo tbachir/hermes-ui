@@ -1,76 +1,62 @@
 # Security
 
-## Hermes secrets are server-only
+## Hermes is private infrastructure
 
-Never expose any of the following as `NEXT_PUBLIC_*`:
+The intended topology is:
 
-- `HERMES_SESSION_TOKEN`
-- `HERMES_BEARER_TOKEN`
-- `HERMES_API_SERVER_KEY`
+```text
+Browser / external client
+        │
+        ▼
+Application backend
+        │ private network + bearer key
+        ▼
+Hermes API Server
+```
 
-The browser talks to `/api/hermes/*`. Those routes talk to Hermes through
-`@burner-io/hermes`.
+Hermes is not a public application API. Prefer network isolation/firewall rules in addition to the API Server key.
 
-## Supabase authentication
+## Server-only credentials
 
-`requireHermesAccess()` uses `supabase.auth.getClaims()` and then applies
-`HERMES_UI_ALLOWED_USER_IDS`.
+The V0.4 runtime contract is only:
 
-An empty allow-list fails closed with HTTP 503.
+```dotenv
+HERMES_URL=
+HERMES_API_KEY=
+```
 
-`*` means every authenticated user can control the exposed Hermes endpoints and
-must be an explicit choice.
+Never expose either value through `NEXT_PUBLIC_*`, client props, browser bundles, logs or rendered diagnostics.
 
-## Do not use Supabase service credentials in the browser
+## Application authentication is separate
 
-The registry only needs:
+`hermes-ui` does not choose the consuming application's identity provider. Authenticate and authorize the caller before entering the Hermes BFF. The default `hermes-access` block uses the application-provided `@/lib/app-user` seam and optional role/user allow-lists.
 
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+Authentication to the application does not automatically imply permission to operate Hermes.
 
-Any future server-side secret key must remain server-only.
+## Bounded BFF, never a generic proxy
 
-## Keep the route surface narrow
+Do not add an endpoint that forwards arbitrary Hermes method/path/body input. Every browser-facing route should expose a reviewed operation with validated inputs.
 
-Do not replace `app/api/hermes/*` with a generic proxy unless the consuming app
-has an explicit authorization model for every Hermes operation.
+The base registry is limited to:
+
+- health + capabilities;
+- model discovery/options;
+- read-only skills/toolsets;
+- session resources/messages;
+- native Runs, stop and approvals.
+
+## Capability discovery
+
+Use `/v1/capabilities` to determine which optional features the connected Hermes version advertises. Do not silently fall back to Web Dashboard/private endpoints when an API Server feature is absent.
+
+## Mutations
+
+The default Next.js mutation guard rejects cross-origin browser mutations after application authorization. A consuming app can additionally apply CSRF, rate limits, audit records and domain-specific policies.
+
+## CORS
+
+The base architecture is server-to-server and does not require browser-to-Hermes CORS. If a deployment intentionally enables direct browser access, that is a different trust model and should not expose the server-only application key.
 
 ## Workflow
 
-Workflow definitions are app data. If stored in Supabase later, every exposed
-table must have RLS and ownership/organization policies.
-
-## Mutation origin check
-
-The provided POST/DELETE route handlers use `requireHermesMutationAccess()` in
-addition to Supabase identity verification. Browser mutations carrying an
-`Origin` header must be same-origin with the Next.js request URL. This is a
-small defense-in-depth layer against cross-origin control-plane mutations; it
-does not replace authentication or the explicit user allow-list.
-
-## Credential forms
-
-`hermes-credential-manager` can accept a provider API key entered by an authorized
-user. The value is POSTed to the protected same-origin Next.js route and handed to
-Hermes; the registry does not store it in React state after the dialog closes, does
-not cache it in TanStack Query, and never returns the raw key from a GET route.
-Production deployments must use HTTPS between the browser and the Next.js app.
-
-Provider OAuth URLs are opened only from the explicit provider action response.
-Do not auto-follow arbitrary URLs returned by generic Hermes endpoints elsewhere.
-
-## Developer/operator surface defaults
-
-The registry deliberately keeps several native Hermes capabilities narrower than
-what `@burner-io/hermes` can do:
-
-- config is reduced to a reviewed non-secret read-only subset;
-- environment variables are redacted and `env.reveal()` has no browser route;
-- managed files are list-only;
-- Git is read-only and remote paths must match `HERMES_UI_GIT_ROOTS`;
-- operations expose only `doctor` and `security-audit`;
-- log reads are capped at 500 lines;
-- messaging onboarding/pairing mutations remain server-only in V0.2.
-
-A consuming application can add more routes, but each should be treated as a new
-authorization boundary rather than widening a generic proxy.
+Workflow definitions and application approvals remain app-owned. A workflow Hermes node invokes the same private API Server connection; it does not bypass application policy merely because Hermes can execute powerful tools internally.
