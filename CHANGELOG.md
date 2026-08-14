@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.2 - 2026-08-14
+
+- Upgraded installable Hermes foundations to `@burner-io/hermes ^0.6.0`.
+- Replaced manual construction of control/API clients with the SDK-level `createHermesConnectionUnchecked()` helper.
+- Added `getHermesConnection()` as the canonical server-side source while keeping the existing control/API getters as compatibility aliases for installed BFF routes.
+- Kept the complete Hermes control-plane catalog and the single `HERMES_URL` + `HERMES_API_KEY` application contract unchanged.
+
 ## 0.4.1 - 2026-08-14
 
 - Restored the complete Hermes control-plane catalog after the V0.4 convergence had removed too many UI surfaces.
