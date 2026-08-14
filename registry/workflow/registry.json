@@ -35,7 +35,7 @@
         }
       ],
       "categories": ["hermes", "workflow", "react-flow", "ai-elements"],
-      "docs": "The workflow definition remains application-owned. Execute hermes.run nodes through the consuming application's single server-only HermesApiServerApi connection (HERMES_URL + HERMES_API_KEY). Hermes itself does not know about Workflow."
+      "docs": "The workflow definition remains application-owned. Execute hermes.run nodes through the consuming application's server-side HermesConnection.apiServer facade created from HERMES_URL + HERMES_API_KEY. Hermes itself does not know about Workflow."
     }
   ]
 }
