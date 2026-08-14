@@ -6,6 +6,8 @@ const source = JSON.parse(fs.readFileSync(path.join(root, "registry.json"), "utf
 const errors = [];
 const names = new Set();
 const items = [];
+const activeFiles = new Set();
+
 const itemTypes = new Set([
   "registry:lib",
   "registry:block",
@@ -20,6 +22,7 @@ const itemTypes = new Set([
   "registry:font",
   "registry:item",
 ]);
+
 const fileTypes = new Set([
   "registry:lib",
   "registry:block",
@@ -32,6 +35,15 @@ const fileTypes = new Set([
   "registry:style",
   "registry:base",
   "registry:item",
+]);
+
+const deprecatedHermesEnv = new Set([
+  "HERMES_DASHBOARD_URL",
+  "HERMES_SESSION_TOKEN",
+  "HERMES_BEARER_TOKEN",
+  "HERMES_API_SERVER_URL",
+  "HERMES_API_SERVER_KEY",
+  "HERMES_DEFAULT_PROFILE",
 ]);
 
 if (!source.include?.length) {
@@ -50,6 +62,7 @@ for (const include of source.include ?? []) {
 
   for (const item of registry.items ?? []) {
     items.push({ item, include });
+
     if (names.has(item.name)) errors.push(`Duplicate item name: ${item.name}`);
     names.add(item.name);
 
@@ -60,6 +73,15 @@ for (const include of source.include ?? []) {
 
     if (!itemTypes.has(item.type)) {
       errors.push(`Unsupported item type for ${item.name}: ${item.type}`);
+    }
+
+    for (const envName of Object.keys(item.envVars ?? {})) {
+      if (deprecatedHermesEnv.has(envName)) {
+        errors.push(`Deprecated Hermes env var in active item ${item.name}: ${envName}`);
+      }
+      if (/^NEXT_PUBLIC_HERMES_/.test(envName)) {
+        errors.push(`Hermes configuration exposed as NEXT_PUBLIC_* in active item ${item.name}: ${envName}`);
+      }
     }
 
     for (const file of item.files ?? []) {
@@ -77,6 +99,8 @@ for (const include of source.include ?? []) {
       const sourcePath = path.join(base, file.path);
       if (!fs.existsSync(sourcePath)) {
         errors.push(`Missing source file for ${item.name}: ${path.relative(root, sourcePath)}`);
+      } else {
+        activeFiles.add(sourcePath);
       }
     }
   }
@@ -91,8 +115,37 @@ for (const { item } of items) {
   }
 }
 
+for (const file of activeFiles) {
+  const content = fs.readFileSync(file, "utf8");
+  const relative = path.relative(root, file);
+
+  if (/NEXT_PUBLIC_HERMES_/.test(content)) {
+    errors.push(`Hermes configuration exposed as NEXT_PUBLIC_* in active source: ${relative}`);
+  }
+
+  if (/HERMES_(?:DASHBOARD_URL|SESSION_TOKEN|BEARER_TOKEN|API_SERVER_URL|API_SERVER_KEY|DEFAULT_PROFILE)/.test(content)) {
+    errors.push(`Deprecated Hermes connection variable found in active source: ${relative}`);
+  }
+
+  if (/getHermesManagementClient\s*\(/.test(content)) {
+    errors.push(`Dashboard-era management client found in active source: ${relative}`);
+  }
+
+  if (/createHermesClientUnchecked\s*\(/.test(content)) {
+    errors.push(`Dashboard/runtime client constructor found in active source: ${relative}`);
+  }
+
+  if (/@tbachir\/(?:hermes|workflow)/.test(content)) {
+    errors.push(`Legacy package import found in active registry source: ${relative}`);
+  }
+
+  if (/\/api\/hermes\/proxy/.test(content)) {
+    errors.push(`Generic Hermes proxy detected in active source: ${relative}`);
+  }
+}
+
 const sourceFiles = [];
-for (const directory of ["registry", "docs", "scripts"]) {
+for (const directory of ["docs", "scripts"]) {
   const start = path.join(root, directory);
   const stack = fs.existsSync(start) ? [start] : [];
   while (stack.length) {
@@ -107,25 +160,27 @@ for (const directory of ["registry", "docs", "scripts"]) {
 
 for (const file of sourceFiles) {
   const content = fs.readFileSync(file, "utf8");
+  const relative = path.relative(root, file);
 
-  if (/NEXT_PUBLIC_HERMES_(?:SESSION|BEARER|API_SERVER_KEY)/.test(content)) {
-    errors.push(`Hermes secret exposed as NEXT_PUBLIC_* in ${path.relative(root, file)}`);
+  if (/NEXT_PUBLIC_HERMES_(?:URL|API_KEY|SESSION|BEARER)/.test(content)) {
+    errors.push(`Hermes credential/config exposed as NEXT_PUBLIC_* in ${relative}`);
   }
 
-  if (/SUPABASE_(?:SERVICE_ROLE|SECRET)_KEY/.test(content) && file.includes("registry/components")) {
-    errors.push(`Supabase elevated key referenced by client component: ${path.relative(root, file)}`);
-  }
-  if (/@tbachir\/(?:hermes|workflow)/.test(content) && file.includes("registry/")) {
-    errors.push(`Legacy package import found in registry source: ${path.relative(root, file)}`);
-  }
-
-  if (/\.env\.reveal\s*\(/.test(content)) {
-    errors.push(`Environment secret reveal is not allowed in the default registry: ${path.relative(root, file)}`);
+  if (/@tbachir\/(?:hermes|workflow)/.test(content)) {
+    errors.push(`Legacy package import found in documentation/tooling: ${relative}`);
   }
 
   if (/\/api\/hermes\/proxy/.test(content) && !file.endsWith("registry.json")) {
-    errors.push(`Generic Hermes proxy detected: ${path.relative(root, file)}`);
+    errors.push(`Generic Hermes proxy detected: ${relative}`);
   }
+}
+
+if (!names.has("hermes-server") || !names.has("hermes-api") || !names.has("hermes-query")) {
+  errors.push("V0.4 registry must expose hermes-server, hermes-api and hermes-query foundations.");
+}
+
+if (names.has("supabase-next")) {
+  errors.push("Application backend/auth foundations must not be part of the Hermes V0.4 registry.");
 }
 
 if (errors.length) {
@@ -133,4 +188,6 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Registry OK: ${names.size} unique items, local dependencies resolved, file targets valid.`);
+console.log(
+  `Registry OK: ${names.size} active items, local dependencies resolved, file targets valid, Hermes API Server contract enforced.`,
+);
