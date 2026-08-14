@@ -2,8 +2,9 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "name": "burner-hermes-app-template",
   "repository": "tbachir/burner-hermes-app-template",
-  "revision": "44ec62ccc1f54c783ca3b4a755bd2aef0dacdbcf",
-  "hermesUi": "0.4.0",
+  "revision": "f4d8b239bf1915d7f785dad9bf2b7a4cc0242d29",
+  "version": "0.2.1",
+  "hermesUi": "0.4.1",
   "hermes": "^0.5.0",
   "workflow": "^0.1.0",
   "hermesConnection": {
@@ -11,5 +12,5 @@
     "publicBrowserAccess": false
   },
   "controlPlane": "full",
-  "notes": "Compatibility pin to the template PR restoring the full Hermes control plane while retaining one private HERMES_URL + HERMES_API_KEY connection. The standalone template remains its own source of truth and is not duplicated into this public registry repository."
+  "notes": "Compatibility pin to burner-hermes-app-template 0.2.1: full Hermes control plane over one private HERMES_URL + HERMES_API_KEY connection. The standalone template remains its own source of truth and is not duplicated into this public registry repository."
 }
