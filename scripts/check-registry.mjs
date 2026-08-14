@@ -127,20 +127,26 @@ for (const file of activeFiles) {
     errors.push(`Deprecated Hermes connection variable found in active source: ${relative}`);
   }
 
-  if (/getHermesManagementClient\s*\(/.test(content)) {
-    errors.push(`Dashboard-era management client found in active source: ${relative}`);
-  }
-
-  if (/createHermesClientUnchecked\s*\(/.test(content)) {
-    errors.push(`Dashboard/runtime client constructor found in active source: ${relative}`);
-  }
-
   if (/@tbachir\/(?:hermes|workflow)/.test(content)) {
     errors.push(`Legacy package import found in active registry source: ${relative}`);
   }
 
   if (/\/api\/hermes\/proxy/.test(content)) {
     errors.push(`Generic Hermes proxy detected in active source: ${relative}`);
+  }
+}
+
+const serverFoundationPath = path.join(root, "registry/foundation/hermes-server/server.ts");
+if (fs.existsSync(serverFoundationPath)) {
+  const serverFoundation = fs.readFileSync(serverFoundationPath, "utf8");
+  if (!/baseUrl:\s*env\.url/.test(serverFoundation)) {
+    errors.push("Hermes server foundation must route SDK facades through env.url / HERMES_URL.");
+  }
+  if (!/bearerToken:\s*env\.apiKey/.test(serverFoundation)) {
+    errors.push("Hermes control facade must authenticate with env.apiKey / HERMES_API_KEY.");
+  }
+  if (!/apiKey:\s*env\.apiKey/.test(serverFoundation)) {
+    errors.push("Hermes API Server facade must authenticate with env.apiKey / HERMES_API_KEY.");
   }
 }
 
@@ -175,12 +181,19 @@ for (const file of sourceFiles) {
   }
 }
 
-if (!names.has("hermes-server") || !names.has("hermes-api") || !names.has("hermes-query")) {
-  errors.push("V0.4 registry must expose hermes-server, hermes-api and hermes-query foundations.");
+for (const required of [
+  "hermes-server",
+  "hermes-api",
+  "hermes-query",
+  "hermes-control-plane",
+  "hermes-command-center",
+  "hermes-dashboard-page",
+]) {
+  if (!names.has(required)) errors.push(`Full Hermes registry must expose ${required}.`);
 }
 
 if (names.has("supabase-next")) {
-  errors.push("Application backend/auth foundations must not be part of the Hermes V0.4 registry.");
+  errors.push("Application backend/auth foundations must not be part of the Hermes registry.");
 }
 
 if (errors.length) {
@@ -189,5 +202,5 @@ if (errors.length) {
 }
 
 console.log(
-  `Registry OK: ${names.size} active items, local dependencies resolved, file targets valid, Hermes API Server contract enforced.`,
+  `Registry OK: ${names.size} active items, full control plane restored, one Hermes URL/key enforced.`,
 );
