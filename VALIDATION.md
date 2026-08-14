@@ -1,20 +1,21 @@
 # Validation
 
-V0.4 is validated around the active installable registry, not around deprecated Dashboard-era source files that may remain unreferenced during migration.
+The active registry is validated around two simultaneous invariants:
+
+1. **full Hermes operator coverage is preserved**;
+2. **all Hermes traffic uses one private URL/key pair**.
 
 ## Required invariants
 
-- active `hermes-server` uses only `HERMES_URL` and `HERMES_API_KEY`;
-- no active item requires `HERMES_DASHBOARD_URL`, `HERMES_SESSION_TOKEN`, `HERMES_BEARER_TOKEN` or duplicate API Server URL/key variables;
+- `hermes-server` requires only `HERMES_URL` and `HERMES_API_KEY`;
+- both the control facade and API Server facade use `env.url` / `env.apiKey`;
+- no active item introduces a separate Dashboard URL/session credential or duplicate API Server URL/key variable;
 - no `NEXT_PUBLIC_HERMES_*` credentials;
 - no generic `/api/hermes/proxy`;
-- active BFF routes use one `HermesApiServerApi` client;
-- status reads `/health/detailed` + `/v1/capabilities` through the SDK;
-- models use `/v1/models` + `/api/model/options`;
-- skills/toolsets are read-only API Server resources;
-- sessions use `/api/sessions/*`;
-- Runs use `/v1/runs/*`;
-- the application access guard is authentication-provider agnostic;
+- application authentication remains outside the registry through `@/lib/app-user`;
+- the full `hermes-control-plane` and command/capability/model/automation/observability/developer/learning/communication/system blocks remain installable;
+- focused components for profiles, Kanban, skills, MCP, tools, models, providers, credentials, cron, webhooks, memory, plugins, analytics, logs, developer resources, communication and system operations remain in the catalog;
+- Runs remain native Hermes API Server Runs;
 - workflow remains application-owned through `@burner-io/workflow`.
 
 ## Registry validation
@@ -24,12 +25,12 @@ npm run registry:check
 npm run registry:build
 ```
 
-The registry checker validates unique item names, same-repository dependencies, referenced source files and security invariants.
+The checker validates unique names, local dependencies, referenced source files, one-connection security invariants and presence of the complete control-plane roots.
 
 ## Reference template
 
-Compatibility is pinned in `templates/burner-hermes-app/template.json`. The current pin targets template commit `a7769bf1f93b63f9a523b2dc34748685b25a7997`, which already uses the same single API Server connection model.
+Compatibility is pinned in `templates/burner-hermes-app/template.json`. The standalone template is the reference integration application; `hermes-ui` remains the reusable Hermes registry.
 
-## Migration note
+## Runtime validation
 
-Some old source files can remain in the repository while they are no longer referenced by any active registry item. They are not installed by `shadcn add`. A later cleanup can remove them from history-facing source directories without changing the V0.4 public catalog.
+A consuming application should additionally test its actual Hermes proxy/runtime because individual Hermes operations can vary by version or installed plugin. Runtime absence should surface as an explicit unavailable/error state, not as a switch to a second Hermes credential model.
