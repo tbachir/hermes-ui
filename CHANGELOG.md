@@ -1,19 +1,22 @@
 # Changelog
 
+## 0.4.1 - 2026-08-14
+
+- Restored the complete Hermes control-plane catalog after the V0.4 convergence had removed too many UI surfaces.
+- Kept the simplified runtime contract: one `HERMES_URL` and one `HERMES_API_KEY`.
+- Reintroduced the native control facade as an SDK convenience over the same URL/key rather than as a second Dashboard server connection.
+- Restored profiles, Kanban, MCP, automation, providers/credentials, memory/learning, analytics/logs, developer, communication, gateway/plugins/updates and the full `hermes-control-plane` composition.
+- Restored all specialized control-plane pages while preserving dedicated Runs and Sessions pages.
+- Kept the registry application-auth/backend agnostic through `@/lib/app-user`.
+- Strengthened registry validation so one Hermes URL/key is enforced without forbidding the full control facade.
+
 ## 0.4.0 - 2026-08-14
 
 - Collapsed Hermes runtime configuration to `HERMES_URL` + `HERMES_API_KEY`.
-- Removed Web Dashboard/session-auth concepts from the active installable registry.
-- Rebuilt the server foundation around one `HermesApiServerApi` instance.
-- Rebased status, models, skills, toolsets and sessions on the API Server machine contract.
-- Reduced the active UI catalog to API Server-backed surfaces: health/capabilities, Runs, sessions, models, skills and toolsets.
+- Removed application dependency on a separate Web Dashboard URL/session-auth configuration.
 - Made the default application access guard auth-provider agnostic through `@/lib/app-user`.
-- Added Runs and Sessions pages and simplified the Hermes overview page.
-- Rewrote architecture/security/catalog documentation around private server-to-server Hermes access.
 - Added a versioned reference to the standalone `burner-hermes-app-template` without duplicating its private source into this public repository.
 
 ## 0.2.0 - 2026-08-13
 
-- Initial public registry snapshot with the earlier Dashboard + API Server split.
-
-> The unreleased/local V0.3 Payload/Better Auth experiment informed the app template, but application backend/auth choices are no longer part of the Hermes registry contract in V0.4.
+- Initial public registry snapshot with the first Hermes control-plane catalog.
