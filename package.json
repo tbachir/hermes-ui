@@ -1,6 +1,6 @@
 {
   "name": "hermes-ui-registry",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "private": true,
   "description": "Hermes-focused shadcn registry for the private Hermes control plane, powered by @burner-io/hermes and optional @burner-io/workflow.",
   "type": "module",
