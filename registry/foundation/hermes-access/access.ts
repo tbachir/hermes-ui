@@ -1,70 +1,64 @@
 import "server-only";
 
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { getAppUser, type AppUser } from "@/lib/app-user";
 
 export interface HermesAccessContext {
   userId: string;
-  claims: Record<string, unknown>;
+  user: AppUser;
 }
 
 export type HermesAccessResult =
   | { ok: true; value: HermesAccessContext }
   | { ok: false; response: NextResponse };
 
-function allowedUserIds(): Set<string> {
+function csv(value: string | undefined): Set<string> {
   return new Set(
-    (process.env.HERMES_UI_ALLOWED_USER_IDS ?? "")
+    (value ?? "")
       .split(",")
-      .map((value) => value.trim())
+      .map((item) => item.trim())
       .filter(Boolean),
   );
 }
 
-export async function requireHermesAccess(): Promise<HermesAccessResult> {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.getClaims();
-  const claims = data?.claims as Record<string, unknown> | undefined;
-  const userId = typeof claims?.sub === "string" ? claims.sub : undefined;
+function userRoles(user: AppUser): Set<string> {
+  return csv(user.role);
+}
 
-  if (error || !userId || !claims) {
+export async function requireHermesAccess(): Promise<HermesAccessResult> {
+  const user = await getAppUser();
+  if (!user) {
     return {
       ok: false,
-      response: NextResponse.json(
-        { error: "unauthorized" },
-        { status: 401 },
-      ),
+      response: NextResponse.json({ error: "unauthorized" }, { status: 401 }),
     };
   }
 
-  const allowed = allowedUserIds();
+  if (user.demo) return { ok: true, value: { userId: user.id, user } };
 
-  if (allowed.size === 0) {
+  const allowedIds = csv(process.env.HERMES_UI_ALLOWED_USER_IDS);
+  const configuredRoles = csv(process.env.HERMES_UI_ALLOWED_ROLES);
+  const allowedRoles = configuredRoles.size > 0 ? configuredRoles : new Set(["admin"]);
+  const roles = userRoles(user);
+
+  const idAllowed = allowedIds.has("*") || allowedIds.has(user.id);
+  const roleAllowed = [...roles].some((role) => allowedRoles.has(role));
+
+  if (!idAllowed && !roleAllowed) {
     return {
       ok: false,
       response: NextResponse.json(
         {
-          error: "hermes_access_not_configured",
-          message: "Set HERMES_UI_ALLOWED_USER_IDS before exposing Hermes controls.",
+          error: "forbidden",
+          message: "This application user is not allowed to operate Hermes.",
         },
-        { status: 503 },
-      ),
-    };
-  }
-
-  if (!allowed.has("*") && !allowed.has(userId)) {
-    return {
-      ok: false,
-      response: NextResponse.json(
-        { error: "forbidden" },
         { status: 403 },
       ),
     };
   }
 
-  return { ok: true, value: { userId, claims } };
+  return { ok: true, value: { userId: user.id, user } };
 }
-
 
 export async function requireHermesMutationAccess(
   request: Request,
@@ -84,22 +78,4 @@ export async function requireHermesMutationAccess(
   }
 
   return access;
-}
-
-function normalizeRemotePath(value: string): string | null {
-  const normalized = value.trim().replaceAll("\\", "/").replace(/\/{2,}/g, "/").replace(/\/$/, "");
-  if (!normalized) return null;
-  if (normalized.split("/").some((segment) => segment === "..")) return null;
-  return normalized.toLowerCase();
-}
-
-export function isHermesRemotePathAllowed(path: string, rawRoots: string): boolean {
-  const candidate = normalizeRemotePath(path);
-  if (!candidate) return false;
-  const roots = rawRoots
-    .split(",")
-    .map(normalizeRemotePath)
-    .filter((value): value is string => Boolean(value));
-  if (roots.length === 0) return false;
-  return roots.some((root) => candidate === root || candidate.startsWith(`${root}/`));
 }
