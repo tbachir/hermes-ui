@@ -7,7 +7,7 @@
       "name": "hermes-workflow-builder",
       "type": "registry:block",
       "title": "Hermes Workflow Builder",
-      "description": "React Flow + AI Elements visual editor for @burner-io/workflow with Hermes Run nodes and conditional handles.",
+      "description": "React Flow + AI Elements visual editor for @burner-io/workflow with native Hermes Run nodes and conditional handles.",
       "registryDependencies": [
         "badge",
         "button",
@@ -34,13 +34,8 @@
           "target": "@lib/hermes/sample-workflow.ts"
         }
       ],
-      "categories": [
-        "hermes",
-        "workflow",
-        "react-flow",
-        "ai-elements"
-      ],
-      "docs": "The workflow definition remains application-owned. @burner-io/hermes is only used by the workflow runtime adapter; Hermes itself does not know about Workflow."
+      "categories": ["hermes", "workflow", "react-flow", "ai-elements"],
+      "docs": "The workflow definition remains application-owned. Execute hermes.run nodes through the consuming application's single server-only HermesApiServerApi connection (HERMES_URL + HERMES_API_KEY). Hermes itself does not know about Workflow."
     }
   ]
 }
