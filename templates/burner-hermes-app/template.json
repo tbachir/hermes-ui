@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "name": "burner-hermes-app-template",
   "repository": "tbachir/burner-hermes-app-template",
-  "revision": "682ab83296d9e4e5234c351dd26dbc7ef75613f4",
+  "revision": "6c60351d58cc84d880371ed8333bccd0acff6104",
   "version": "0.2.2",
   "hermesUi": "0.4.2",
   "hermes": "^0.6.0",
