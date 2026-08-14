@@ -1,58 +1,48 @@
 import "server-only";
 
 import {
-  createApiServerApi,
-  createHermesClientUnchecked,
+  createHermesConnectionUnchecked,
   type HermesApiServerApi,
+  type HermesConnection,
   type HermesRuntimeClient,
 } from "@burner-io/hermes";
 
 import { getHermesServerEnv } from "@/lib/hermes/env";
 
-let apiServerClient: HermesApiServerApi | undefined;
-let controlClient: HermesRuntimeClient | undefined;
+let connection: HermesConnection | undefined;
 
 /**
- * Native Hermes control facade.
+ * Single trusted machine connection to Hermes.
  *
- * This is NOT a second Hermes server or a second connection. The SDK exposes
- * historical control-plane methods through HermesRuntimeClient, while Runs and
- * other API Server resources live on HermesApiServerApi. Both clients point to
- * the exact same HERMES_URL and authenticate with the exact same HERMES_API_KEY
- * as a Bearer token through the private Hermes proxy/API surface.
+ * @burner-io/hermes >= 0.6 owns the mapping from one application-level
+ * HERMES_URL + HERMES_API_KEY pair to its native control and Runs/API facades.
+ * The facades are typed views over one private origin, not separate servers or
+ * authentication models.
  */
-export function getHermesControlClient(): HermesRuntimeClient {
-  if (controlClient) return controlClient;
+export function getHermesConnection(): HermesConnection {
+  if (connection) return connection;
 
   const env = getHermesServerEnv();
-  controlClient = createHermesClientUnchecked({
-    baseUrl: env.url,
-    bearerToken: env.apiKey,
-    probeOnCreate: false,
-  });
-
-  return controlClient;
-}
-
-/**
- * API Server facade for Runs, capabilities and OpenAI-compatible resources.
- * Uses the same HERMES_URL + HERMES_API_KEY pair as getHermesControlClient().
- */
-export function getHermesApiServer(): HermesApiServerApi {
-  if (apiServerClient) return apiServerClient;
-
-  const env = getHermesServerEnv();
-  apiServerClient = createApiServerApi({
+  connection = createHermesConnectionUnchecked({
     baseUrl: env.url,
     apiKey: env.apiKey,
   });
 
-  return apiServerClient;
+  return connection;
+}
+
+/** Compatibility getter for existing explicit control-plane BFF routes. */
+export function getHermesControlClient(): HermesRuntimeClient {
+  return getHermesConnection().control;
+}
+
+/** Compatibility getter for native Runs and API Server resources. */
+export function getHermesApiServer(): HermesApiServerApi {
+  return getHermesConnection().apiServer;
 }
 
 /**
- * Backward-compatible SDK facade name used by existing registry route sources.
- * It does not imply a Dashboard listener; it is an alias over the same private
- * Hermes URL and API key. New code should prefer getHermesControlClient().
+ * Historical name retained so installing the updated foundation does not force
+ * consumers to rewrite existing route handlers in the same migration.
  */
 export const getHermesManagementClient = getHermesControlClient;
